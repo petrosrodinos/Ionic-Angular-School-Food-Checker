@@ -2,24 +2,41 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { auth } from 'src/app/types/auth';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { StorageService } from '../storage/storage.service';
+import { Store } from '@ngrx/store';
+import { logOut } from 'src/app/ngrx/auth/auth.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireserviceService {
+  authState = getAuth();
+
   constructor(
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
-    private storage: StorageService
-  ) {}
+    private storage: StorageService,
+    public store: Store
+  ) {
+    onAuthStateChanged(this.authState, (user) => {
+      if (!user) {
+        this.clearUser();
+      }
+    });
+  }
 
   loginWithEmail(data: auth) {
     try {
       return this.auth.signInWithEmailAndPassword(data.email, data.password);
     } catch (error) {}
   }
+
+  // onAuthStateChanged(authState:any, (user:any) => {
+  //   if (user) {
+  //   } else {
+  //   }
+  // });
 
   signup(data: auth) {
     try {
@@ -30,20 +47,18 @@ export class FireserviceService {
     } catch (error) {}
   }
 
-  logout(): any {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        return true;
-      })
-      .catch((error) => {
-        return false;
-      });
+  logout(): void {
+    signOut(this.authState);
+  }
+
+  clearUser() {
+    console.log('clearing user');
+    this.store.dispatch(logOut());
+    this.storage.clear();
   }
 
   getUser() {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    const user = this.authState.currentUser;
     if (user) {
       return user;
     } else {

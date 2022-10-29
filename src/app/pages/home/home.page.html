@@ -3,13 +3,13 @@
     <ion-buttons slot="end">
       <ion-icon
         (click)="login()"
-        *ngIf="!isLoggedIn"
+        *ngIf="!isUserLoggedIn()"
         class="toolbar-icon login-btn"
         name="log-in-outline"
         color="primary"
       ></ion-icon>
       <ion-icon
-        *ngIf="isLoggedIn"
+        *ngIf="isUserLoggedIn()"
         class="toolbar-icon"
         name="power-outline"
         color="primary"

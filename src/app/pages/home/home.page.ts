@@ -58,20 +58,6 @@ export class HomePage {
     this.loading = false;
   }
 
-  // deleteFood(id: string): void {
-  //   this.loading = true;
-  //   this.foodService.deleteFood(id).then(
-  //     (res) => {
-  //       this.toastController.presentToast('success', 'Meal deleted');
-  //     },
-  //     (err) => {
-  //       this.toastController.presentToast('primary', 'Could not delete meal');
-  //       this.loading = false;
-  //     }
-  //   );
-  //   this.loading = false;
-  // }
-
   refresh(ev: any) {
     this.getFoods();
     ev.target.complete();
@@ -81,11 +67,8 @@ export class HomePage {
     this.router.navigateByUrl('/auth/login');
   }
 
-  async logoutUser(): Promise<void> {
-    this.store.dispatch(logOut());
+  logoutUser(): void {
     this.fireService.logout();
-    this.storageService.clear();
-    this.router.navigateByUrl('/home');
   }
 
   isUserLoggedIn(): boolean {
