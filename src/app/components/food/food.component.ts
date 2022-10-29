@@ -26,7 +26,7 @@ export class FoodComponent implements OnInit {
       .get('user')
       .then((res) => {
         console.log(res);
-        this.isAdmin = res.admin;
+        this.isAdmin = res?.admin || false;
       })
       .catch((err) => {
         console.log(err);
