@@ -1,0 +1,17 @@
+@import "../../../global.scss";
+
+.food-container {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.no-data__container {
+  color: $primary-color;
+  max-width: 1200px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  height: 30%;
+}

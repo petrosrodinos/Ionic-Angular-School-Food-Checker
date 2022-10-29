@@ -1,0 +1,22 @@
+ion-card-header.ios {
+  display: flex;
+  flex-flow: column-reverse;
+}
+
+.food-card {
+  width: 100%;
+}
+
+.food-date__text {
+  padding-left: 15px;
+}
+
+.food-date__text span {
+  position: relative;
+  top: -5px;
+}
+
+.food-header__container {
+  position: relative;
+  top: -10px;
+}

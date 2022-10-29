@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-icon
+        (click)="login()"
+        *ngIf="!isLoggedIn"
+        class="toolbar-icon login-btn"
+        name="log-in-outline"
+        color="primary"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="isLoggedIn"
+        class="toolbar-icon"
+        name="power-outline"
+        color="primary"
+        (click)="logoutUser()"
+      ></ion-icon>
+    </ion-buttons>
+    <ion-title> List </ion-title>
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid *ngIf="foods.length>0" class="food-container">
+    <ion-row>
+      <ion-col *ngFor="let food of foods" size="12" size-md="6" size-lg="4"
+        ><app-food [food]="food"></app-food
+      ></ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="no-data__container" *ngIf="!loading && foods.length==0">
+    <h2>There are no data inserted yet or something happened :(</h2>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon id="open-modal" name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <app-add-food></app-add-food>
+</ion-content>

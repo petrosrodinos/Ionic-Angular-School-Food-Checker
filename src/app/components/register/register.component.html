@@ -1,0 +1,77 @@
+<!-- [formGroup]="register"
+    (ngSubmit)="onSubmit()"
+  [formControl]="register.controls['username']"
+  
+  -->
+<div class="auth-container">
+  <br />
+  <br />
+  <br />
+  <ion-card>
+    <form>
+      <ion-card-header>
+        <ion-card-title>Register</ion-card-title>
+      </ion-card-header>
+      <ion-list>
+        <ion-item>
+          <ion-input
+            name="username"
+            [(ngModel)]="username"
+            placeholder="Username"
+          ></ion-input>
+          <!-- <div
+            class="input-error"
+            *ngIf="register.get('username').hasError('required')"
+          >
+            Required
+          </div> -->
+          <ion-button slot="end" fill="clear">
+            <ion-icon
+              class="input-icon"
+              name="person-outline"
+              color="primary"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br />
+        <ion-item>
+          <ion-input
+            name="phone"
+            [(ngModel)]="phone"
+            type="tel"
+            placeholder="Phone"
+          ></ion-input>
+          <ion-button slot="end" fill="clear">
+            <ion-icon
+              name="call-outline"
+              color="primary"
+              class="input-icon"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br />
+
+        <ion-item>
+          <ion-input
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Password"
+            type="password"
+          ></ion-input>
+          <ion-button slot="end" fill="clear">
+            <ion-icon
+              class="input-icon"
+              name="lock-closed-outline"
+              color="primary"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br />
+
+        <ion-button type="button" (click)="onSubmit()" expand="block"
+          >Register
+        </ion-button>
+      </ion-list>
+    </form>
+  </ion-card>
+</div>

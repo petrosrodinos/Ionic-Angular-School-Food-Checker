@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="primary" default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Back</ion-title>
+    <ion-progress-bar *ngIf="isloading" type="indeterminate"></ion-progress-bar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="login">
+      <ion-label>Login</ion-label>
+      <ion-icon name="log-in-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="register">
+      <ion-label>Register</ion-label>
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

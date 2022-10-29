@@ -1,0 +1,7 @@
+{
+  "name": "foodchecker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

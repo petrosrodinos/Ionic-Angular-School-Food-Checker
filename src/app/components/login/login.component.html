@@ -1,0 +1,54 @@
+<div class="auth-container">
+  <br />
+  <br />
+  <br />
+  <ion-card>
+    <form>
+      <ion-card-header>
+        <ion-card-title>Login</ion-card-title>
+        <ion-card-title *ngIf="isloading">loading</ion-card-title>
+      </ion-card-header>
+      <ion-list>
+        <ion-item>
+          <ion-input
+            autocomplete="email"
+            name="phone"
+            [(ngModel)]="phone"
+            type="email"
+            placeholder="Phone"
+          ></ion-input>
+          <ion-button slot="end" fill="clear">
+            <ion-icon
+              name="call-outline"
+              color="primary"
+              class="input-icon"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br />
+
+        <ion-item>
+          <ion-input
+            name="password"
+            autocomplete="password"
+            [(ngModel)]="password"
+            placeholder="Password"
+            type="password"
+          ></ion-input>
+          <ion-button slot="end" fill="clear">
+            <ion-icon
+              class="input-icon"
+              name="lock-closed-outline"
+              color="primary"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br />
+
+        <ion-button type="button" (click)="onSubmit()" expand="block"
+          >Login</ion-button
+        >
+      </ion-list>
+    </form>
+  </ion-card>
+</div>

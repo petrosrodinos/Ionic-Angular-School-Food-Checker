@@ -1,0 +1,29 @@
+<div *ngIf="food">
+  <ion-card>
+    <h3 class="primary-color food-date__text">
+      <ion-icon
+        class="toolbar-icon"
+        name="time-outline"
+        color="primary"
+      ></ion-icon>
+      <span>{{ food.time }}</span>
+    </h3>
+    <img
+      *ngIf="food.photo"
+      [alt]="'photo of: ' + food.firstplate + ' and ' + food.secondplate"
+      [src]="food.photo"
+    />
+    <ion-card-header [ngClass]="!food.photo && 'food-header__container'">
+      <ion-card-title
+        >{{ food.firstplate }} - {{ food.secondplate }}</ion-card-title
+      >
+      <ion-card-subtitle>@{{ food.username || food.userId }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="food.description">
+      <b>
+        {{ food.description }}
+      </b>
+    </ion-card-content>
+  </ion-card>
+</div>
