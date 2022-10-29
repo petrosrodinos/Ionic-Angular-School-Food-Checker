@@ -54,7 +54,7 @@ export class AddFoodComponent implements OnInit {
 
   addFood(): void {
     this.loading = true;
-    if (this.dateService.canAddFood()) {
+    if (!this.dateService.canAddFood()) {
       this.toastController.presentToast(
         'primary',
         'Restaurant is closed, you can not add food'

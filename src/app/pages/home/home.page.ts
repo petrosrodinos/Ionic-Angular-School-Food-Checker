@@ -34,11 +34,11 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.getFoods();
-    this.storageService.get('user').then((user) => {
-      if (user) {
-        this.isAdmin = user?.admin || false;
-      }
-    });
+    // this.storageService.get('user').then((user) => {
+    //   if (user) {
+    //     this.isAdmin = user?.admin || false;
+    //   }
+    // });
   }
 
   async getFoods() {
