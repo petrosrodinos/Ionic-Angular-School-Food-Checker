@@ -32,12 +32,6 @@ export class FireserviceService {
     } catch (error) {}
   }
 
-  // onAuthStateChanged(authState:any, (user:any) => {
-  //   if (user) {
-  //   } else {
-  //   }
-  // });
-
   signup(data: auth) {
     try {
       return this.auth.createUserWithEmailAndPassword(
@@ -52,7 +46,6 @@ export class FireserviceService {
   }
 
   clearUser() {
-    console.log('clearing user');
     this.store.dispatch(logOut());
     this.storage.clear();
   }
