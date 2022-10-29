@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { FoodService } from 'src/app/services/food/food.service';
 import { Component, OnInit } from '@angular/core';
@@ -6,9 +5,6 @@ import { DataService } from '../../services/data.service';
 import { Router } from '@angular/router';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
 import { Food } from 'src/app/types/food';
-import { getAuthState } from 'src/app/ngrx/auth/auth.selectors';
-import { logOut } from 'src/app/ngrx/auth/auth.actions';
-import { addFoodAction } from 'src/app/ngrx/food/food.actions';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 
@@ -17,10 +13,11 @@ import { StorageService } from 'src/app/services/storage/storage.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   public isLoggedIn: boolean;
   public foods: Food[] = [];
   public loading = false;
+  public isAdmin = false;
   // auth$: Observable<boolean>;
 
   constructor(
@@ -35,9 +32,13 @@ export class HomePage {
     // this.auth$ = this.store.select(getAuthState);
   }
 
-  ngOnInit() {
-    this.store.select(getAuthState).subscribe((res) => (this.isLoggedIn = res));
+  async ngOnInit() {
     this.getFoods();
+    this.storageService.get('user').then((user) => {
+      if (user) {
+        this.isAdmin = user?.admin || false;
+      }
+    });
   }
 
   async getFoods() {

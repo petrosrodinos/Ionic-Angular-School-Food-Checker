@@ -1,8 +1,5 @@
-import { Auth } from 'firebase/auth';
-import { Observable } from 'rxjs';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Food } from 'src/app/types/food';
 import { Store } from '@ngrx/store';
 import { getAuthState } from 'src/app/ngrx/auth/auth.selectors';
 import { ToastService } from 'src/app/services/toast/toast.service';
@@ -11,6 +8,7 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { PhotoService } from 'src/app/services/photo/photo.service';
 import { FoodPhoto } from 'src/app/types/food';
+import { DateService } from 'src/app/services/date/date.service';
 @Component({
   selector: 'app-add-food',
   templateUrl: './add-food.component.html',
@@ -38,7 +36,8 @@ export class AddFoodComponent implements OnInit {
     private toastController: ToastService,
     public foodService: FoodService,
     private storage: StorageService,
-    public photoService: PhotoService
+    public photoService: PhotoService,
+    private dateService: DateService
   ) {}
 
   async ngOnInit() {
@@ -55,48 +54,42 @@ export class AddFoodComponent implements OnInit {
 
   addFood(): void {
     this.loading = true;
+    if (this.dateService.canAddFood()) {
+      this.toastController.presentToast(
+        'primary',
+        'Restaurant is closed, you can not add food'
+      );
+      return;
+    }
     this.storage
       .get('user')
       .then((val: any) => {
-        this.store.select(getAuthState).subscribe((res) => {
-          this.auth = res;
-        });
-        if (this.auth) {
-          let food = {
-            firstplate: this.firstplate,
-            secondplate: this.secondplate,
-            description: this.description,
-            username: val.username,
-            photo: this.photo,
-          };
-          this.foodService
-            .addFood(food)
-            .then((res) => {
-              this.loading = false;
-              this.toastController.presentToast(
-                'success',
-                'Meal added successfully'
-              );
-              this.resetFields();
-            })
-            .catch((err) => {
-              this.loading = false;
-              this.toastController.presentToast(
-                'primary',
-                'Could not add meal'
-              );
-            });
-        } else {
-          this.toastController.presentToast(
-            'primary',
-            'Please log in to continue'
-          );
-        }
+        let food = {
+          firstplate: this.firstplate,
+          secondplate: this.secondplate,
+          description: this.description,
+          username: val.username,
+          photo: this.photo,
+        };
+        this.foodService
+          .addFood(food)
+          .then((res) => {
+            this.loading = false;
+            this.toastController.presentToast(
+              'success',
+              'Meal added successfully'
+            );
+            this.resetFields();
+          })
+          .catch((err) => {
+            this.loading = false;
+            this.toastController.presentToast('primary', 'Could not add meal');
+          });
       })
       .catch((err) => {
         this.toastController.presentToast(
           'primary',
-          'Please log in to continue'
+          'Please log in to continue 2s'
         );
       });
     this.loading = false;

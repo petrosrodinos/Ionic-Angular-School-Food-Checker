@@ -38,6 +38,14 @@
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button
+      (click)="deleteOldFoods()"
+      *ngIf="isAdmin"
+      color="secondary"
+    >
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-fab-button>
+    <br />
     <ion-fab-button>
       <ion-icon id="open-modal" name="add"></ion-icon>
     </ion-fab-button>

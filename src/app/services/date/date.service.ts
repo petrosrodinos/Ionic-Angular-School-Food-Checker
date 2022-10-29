@@ -21,4 +21,15 @@ export class DateService {
 
     return [day, month, formatted.getFullYear()].join('-');
   };
+
+  canAddFood = () => {
+    const now = new Date();
+    let time = now.getHours();
+    console.log(time);
+    if ((time >= 12 && time <= 16) || (time >= 19 && time <= 22)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 }
