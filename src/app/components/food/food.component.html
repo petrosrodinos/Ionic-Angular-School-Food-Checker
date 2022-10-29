@@ -25,7 +25,7 @@
         {{ food.description }}
       </b>
     </ion-card-content>
-    <ion-button *ngIf="isAdmin" (click)="deleteFood(food.id)">{{
+    <ion-button fill="clear" *ngIf="isAdmin" (click)="deleteFood(food.id)">{{
       loading ? "deleting" : "delete"
     }}</ion-button>
   </ion-card>

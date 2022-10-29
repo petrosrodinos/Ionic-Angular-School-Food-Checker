@@ -47,6 +47,7 @@ export class HomePage {
     this.foodService.getFoods().subscribe(
       (res: any[]) => {
         this.foods = res;
+        this.loading = false;
       },
       (err: any) => {
         console.log(err);
