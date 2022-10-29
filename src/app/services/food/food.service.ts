@@ -10,6 +10,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 })
 export class FoodService {
   imagePath: string;
+  user: any;
   constructor(
     private firestore: AngularFirestore,
     private fireservice: FireserviceService,
@@ -18,19 +19,29 @@ export class FoodService {
   ) {}
 
   public async addFood(food: Food): Promise<any> {
-    const user = this.fireservice.getUser();
-    if (user) {
-      return this.uploadPhoto(food).then((res) => {
-        const foodWithUser = {
-          ...food,
-          photo: res,
-          userId: user.uid,
-          date: this.dateService.formatDate(new Date()),
-          time: this.dateService.formatTime(new Date()),
-        };
-        return this.firestore.collection('food').add(foodWithUser);
-      });
+    this.user = this.fireservice.getUser();
+    if (this.user) {
+      if (food.photo) {
+        return this.uploadPhoto(food).then((res) => {
+          return this.addFoodFinal(food, res);
+        });
+      } else {
+        return this.addFoodFinal(food);
+      }
     }
+  }
+
+  public addFoodFinal(food: Food, photo = ''): Promise<any> {
+    const foodId = this.firestore.createId();
+    const foodWithUser = {
+      ...food,
+      id: foodId,
+      photo,
+      userId: this.user.uid,
+      date: this.dateService.formatDate(new Date()),
+      time: this.dateService.formatTime(new Date()),
+    };
+    return this.firestore.collection('food').doc(foodId).set(foodWithUser);
   }
 
   public getFoods(): any {
@@ -41,6 +52,10 @@ export class FoodService {
           .orderBy('time', 'desc')
       )
       .valueChanges();
+  }
+
+  public deleteFood(id: string): Promise<any> {
+    return this.firestore.collection('food').doc(id).delete();
   }
 
   public async uploadPhoto(food: Food): Promise<string> {

@@ -28,8 +28,8 @@
 
   <ion-grid *ngIf="foods.length>0" class="food-container">
     <ion-row>
-      <ion-col *ngFor="let food of foods" size="12" size-md="6" size-lg="4"
-        ><app-food [food]="food"></app-food
+      <ion-col *ngFor="let food of foods" size="12" size-md="6" size-lg="4">
+        <app-food [food]="food"></app-food
       ></ion-col>
     </ion-row>
   </ion-grid>

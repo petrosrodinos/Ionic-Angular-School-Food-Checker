@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { auth } from 'src/app/types/auth';
-import { getAuth, sendPasswordResetEmail, signOut } from 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,8 @@ import { getAuth, sendPasswordResetEmail, signOut } from 'firebase/auth';
 export class FireserviceService {
   constructor(
     private firestore: AngularFirestore,
-    private auth: AngularFireAuth
+    private auth: AngularFireAuth,
+    private storage: StorageService
   ) {}
 
   loginWithEmail(data: auth) {
@@ -50,8 +52,8 @@ export class FireserviceService {
   }
 
   saveDetails(data: any) {
-    const { password, ...final } = data;
-    return this.firestore.collection('users').doc(data.uid).set(final);
+    this.storage.set('user', data);
+    return this.firestore.collection('users').doc(data.uid).set(data);
   }
 
   getDetails(data: any) {

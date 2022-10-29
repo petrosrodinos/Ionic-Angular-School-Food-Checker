@@ -39,7 +39,6 @@ export class RegisterComponent implements OnInit {
           if (res.user.uid) {
             let data = {
               email: this.phone,
-              password: this.password,
               username: this.username,
               uid: res.user.uid,
             };

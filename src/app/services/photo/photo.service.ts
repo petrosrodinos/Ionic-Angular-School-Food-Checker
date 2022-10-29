@@ -20,7 +20,6 @@ export class PhotoService {
       allowEditing: true,
     });
     let res = await this.readAsBase64(capturedPhoto);
-    // console.log(capturedPhoto, res);
 
     return res;
   }

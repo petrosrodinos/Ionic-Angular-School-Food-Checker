@@ -28,8 +28,8 @@ export class HomePage {
     private router: Router,
     private fireService: FireserviceService,
     public foodService: FoodService,
-    public store: Store,
     public toastController: ToastService,
+    public store: Store,
     public storageService: StorageService
   ) {
     // this.auth$ = this.store.select(getAuthState);
@@ -56,6 +56,20 @@ export class HomePage {
     );
     this.loading = false;
   }
+
+  // deleteFood(id: string): void {
+  //   this.loading = true;
+  //   this.foodService.deleteFood(id).then(
+  //     (res) => {
+  //       this.toastController.presentToast('success', 'Meal deleted');
+  //     },
+  //     (err) => {
+  //       this.toastController.presentToast('primary', 'Could not delete meal');
+  //       this.loading = false;
+  //     }
+  //   );
+  //   this.loading = false;
+  // }
 
   refresh(ev: any) {
     this.getFoods();
