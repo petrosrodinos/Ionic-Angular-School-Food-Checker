@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { AppState } from 'src/app/ngrx/app.state';
 import { authAction, logIn } from 'src/app/ngrx/auth/auth.actions';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -20,25 +21,28 @@ export class RegisterComponent implements OnInit {
 
   public username: string = '';
   public password: string = '';
-  public phone: string = '';
+  public email: string = '';
   public isLoading = false;
 
   constructor(
     public fireService: FireserviceService,
     private toastController: ToastService,
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private analyticsService: AnalyticsService
   ) {}
 
   onSubmit(form: any) {
     this.store.dispatch(authAction());
     this.fireService
-      .signup({ email: this.phone, password: this.password })
+      .signup({ email: this.email, password: this.password })
       .then(
         (res) => {
           if (res.user.uid) {
+            this.analyticsService.setUser(res.user.uid);
+            this.analyticsService.logEvent('sign_up', { user: res.user.uid });
             let data = {
-              email: this.phone,
+              email: this.email,
               username: this.username,
               uid: res.user.uid,
             };

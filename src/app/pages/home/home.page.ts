@@ -36,7 +36,7 @@ export class HomePage implements OnInit {
     this.getFoods();
     // this.storageService.get('user').then((user) => {
     //   if (user) {
-    //     this.isAdmin = user?.admin || false;
+    //     this.isAdmin = user.isAdmin;
     //   }
     // });
   }

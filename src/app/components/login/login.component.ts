@@ -7,6 +7,7 @@ import { authAction, logIn } from 'src/app/ngrx/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/ngrx/app.state';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +16,11 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 })
 export class LoginComponent implements OnInit {
   login = new FormGroup({
-    phone: new FormControl(''),
+    email: new FormControl(''),
     password: new FormControl(''),
   });
 
-  public phone: string = '';
+  public email: string = '';
   public password: string = '';
 
   constructor(
@@ -27,27 +28,31 @@ export class LoginComponent implements OnInit {
     private toastController: ToastService,
     private router: Router,
     private store: Store<AppState>,
-    private storage: StorageService
+    private storage: StorageService,
+    private analyticsService: AnalyticsService
   ) {}
 
   onSubmit(form: any) {
     this.store.dispatch(authAction());
     this.fireService
-      .loginWithEmail({ email: this.phone, password: this.password })
+      .loginWithEmail({ email: this.email, password: this.password })
       .then(
         (res) => {
           if (res.user.uid) {
+            this.analyticsService.setUser(res.user.uid);
+            this.analyticsService.logEvent('login', {
+              user: res.user.uid,
+            });
+
             this.fireService.getDetails({ uid: res.user.uid }).subscribe(
               (res) => {
-                if (this.fireService.getUser()) {
-                  this.store.dispatch(logIn());
-                  this.storage.set('user', res);
-                  this.toastController.presentToast(
-                    'success',
-                    'Welcome ' + res['username']
-                  );
-                  this.router.navigate(['/home']);
-                }
+                this.store.dispatch(logIn());
+                this.storage.set('user', res);
+                this.toastController.presentToast(
+                  'success',
+                  'Welcome ' + res['username']
+                );
+                this.router.navigate(['/home']);
               },
               (err) => {
                 this.toastController.presentToast('primary', err.message);

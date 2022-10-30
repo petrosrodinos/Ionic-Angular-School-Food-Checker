@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { getAuthState } from 'src/app/ngrx/auth/auth.selectors';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { selectLoading } from 'src/app/ngrx/food/food.selectors';
 import { FoodService } from 'src/app/services/food/food.service';
@@ -9,6 +8,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { PhotoService } from 'src/app/services/photo/photo.service';
 import { FoodPhoto } from 'src/app/types/food';
 import { DateService } from 'src/app/services/date/date.service';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 @Component({
   selector: 'app-add-food',
   templateUrl: './add-food.component.html',
@@ -37,7 +37,8 @@ export class AddFoodComponent implements OnInit {
     public foodService: FoodService,
     private storage: StorageService,
     public photoService: PhotoService,
-    private dateService: DateService
+    private dateService: DateService,
+    private analyticsService: AnalyticsService
   ) {}
 
   async ngOnInit() {
@@ -53,14 +54,17 @@ export class AddFoodComponent implements OnInit {
   }
 
   addFood(): void {
-    this.loading = true;
-    if (!this.dateService.canAddFood()) {
+    if (this.dateService.canAddFood()) {
+      this.analyticsService.logEvent('add_food_wrong_time', {
+        time: this.dateService.formatTime(new Date()),
+      });
       this.toastController.presentToast(
         'primary',
         'Restaurant is closed, you can not add food'
       );
       return;
     }
+    this.loading = true;
     this.storage
       .get('user')
       .then((val: any) => {
@@ -80,6 +84,7 @@ export class AddFoodComponent implements OnInit {
               'Meal added successfully'
             );
             this.resetFields();
+            this.analyticsService.logEvent('add_food', { user: val.uid });
           })
           .catch((err) => {
             this.loading = false;
@@ -87,9 +92,10 @@ export class AddFoodComponent implements OnInit {
           });
       })
       .catch((err) => {
+        this.analyticsService.logEvent('add_food_no_auth', { user: 'no_auth' });
         this.toastController.presentToast(
           'primary',
-          'Please log in to continue 2s'
+          'Please log in to continue'
         );
       });
     this.loading = false;

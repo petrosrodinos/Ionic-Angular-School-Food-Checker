@@ -6,6 +6,7 @@ import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { StorageService } from '../storage/storage.service';
 import { Store } from '@ngrx/store';
 import { logOut } from 'src/app/ngrx/auth/auth.actions';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,8 @@ export class FireserviceService {
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
     private storage: StorageService,
-    public store: Store
+    public store: Store,
+    private analyticsService: AnalyticsService
   ) {
     onAuthStateChanged(this.authState, (user) => {
       if (!user) {
@@ -42,6 +44,9 @@ export class FireserviceService {
   }
 
   logout(): void {
+    if (this.getUser()) {
+      this.analyticsService.logEvent('sign_out', { user: this.getUser().uid });
+    }
     signOut(this.authState);
   }
 
@@ -55,7 +60,7 @@ export class FireserviceService {
     if (user) {
       return user;
     } else {
-      return false;
+      return user;
     }
   }
 

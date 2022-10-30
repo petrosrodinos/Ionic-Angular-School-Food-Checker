@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,10 +9,11 @@ export class DateService {
 
   formatTime(date: Date | string) {
     var formatted = new Date(date);
-    let hours = ('0' + (formatted.getHours() + 1)).slice(-2);
+    let hours = ('0' + formatted.getHours()).slice(-2);
     let minutes = ('0' + formatted.getMinutes()).slice(-2);
-
-    return [hours, minutes].join(':');
+    let final = [hours, minutes].join(':');
+    console.log(final);
+    return final;
   }
 
   formatDate = (date: Date | string) => {
@@ -25,7 +27,6 @@ export class DateService {
   canAddFood = () => {
     const now = new Date();
     let time = now.getHours();
-    console.log(time);
     if ((time >= 12 && time <= 16) || (time >= 19 && time <= 22)) {
       return true;
     } else {

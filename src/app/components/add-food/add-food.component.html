@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-button (click)="resetFields(); modal.dismiss()"
-            >Cancel</ion-button
+            >Close</ion-button
           >
         </ion-buttons>
         <ion-title>Add today's meal</ion-title>
@@ -13,10 +13,7 @@
           type="indeterminate"
         ></ion-progress-bar>
         <ion-buttons slot="end">
-          <ion-button
-            color="primary"
-            (click)="addFood(); modal.dismiss()"
-            [strong]="true"
+          <ion-button color="primary" (click)="addFood()" [strong]="true"
             >Add</ion-button
           >
         </ion-buttons>
