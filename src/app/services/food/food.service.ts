@@ -84,17 +84,16 @@ export class FoodService {
       .toPromise()
       .then((res) => {
         res.forEach((doc) => {
-          this.deleteFood(doc.id);
+          this.deleteFood(doc.id).catch((err) => {
+            this.toastController.presentToast(
+              'danger',
+              'Could not delete meals'
+            );
+          });
         });
       })
-      .catch((err) => {
-        this.toastController.presentToast(
-          'danger',
-          'Could not delete old meals'
-        );
-      })
-      .finally(() => {
-        this.toastController.presentToast('success', 'Old meals deleted');
+      .then(() => {
+        this.toastController.presentToast('success', 'Deleted old meals');
       });
   }
 }

@@ -74,8 +74,8 @@ export class HomePage implements OnInit {
   }
 
   logoutUser(): void {
-    this.fireService.logout();
     this.isAdmin = false;
+    this.fireService.logout();
   }
 
   isUserLoggedIn(): any {
