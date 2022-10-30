@@ -1,3 +1,4 @@
+import { AnalyticsService } from '../../services/analytics/analytics.service';
 import { Store } from '@ngrx/store';
 import { FoodService } from 'src/app/services/food/food.service';
 import { Component, OnInit } from '@angular/core';
@@ -27,18 +28,18 @@ export class HomePage implements OnInit {
     public foodService: FoodService,
     public toastController: ToastService,
     public store: Store,
-    public storageService: StorageService
+    public storageService: StorageService,
+    public analyticsService: AnalyticsService
   ) {
     // this.auth$ = this.store.select(getAuthState);
   }
 
   async ngOnInit() {
     this.getFoods();
-    // this.storageService.get('user').then((user) => {
-    //   if (user) {
-    //     this.isAdmin = user.isAdmin;
-    //   }
-    // });
+    if (this.fireService.getUser()) {
+      this.isAdmin = this.fireService.getUser().email === 'petros@gmail.com';
+      this.analyticsService.setUser(this.fireService.getUser().uid);
+    }
   }
 
   async getFoods() {
