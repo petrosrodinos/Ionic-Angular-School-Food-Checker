@@ -15,7 +15,10 @@ import { CommonModule } from '@angular/common';
 import { AuthModule } from './pages/auth/auth.module';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
-
+import {
+  AngularFirePerformanceModule,
+  PerformanceMonitoringService,
+} from '@angular/fire/compat/performance';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -30,8 +33,12 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
     ReactiveFormsModule,
     CommonModule,
     AuthModule,
+    AngularFirePerformanceModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    PerformanceMonitoringService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
