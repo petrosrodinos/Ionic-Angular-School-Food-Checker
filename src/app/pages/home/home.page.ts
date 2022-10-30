@@ -36,13 +36,16 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.getFoods();
-    if (this.fireService.getUser()) {
-      this.isAdmin = this.fireService.getUser().email === 'petros@gmail.com';
-      this.analyticsService.setUser(this.fireService.getUser().uid);
-    }
+    setTimeout(() => {
+      let user = this.isUserLoggedIn();
+      if (user) {
+        this.isAdmin = user.email === 'petros@gmail.com';
+        this.analyticsService.setUser(user.uid);
+      }
+    }, 1000);
   }
 
-  async getFoods() {
+  getFoods() {
     // return [];
     // return (this.foods = this.data.getMessages());
     this.loading = true;
@@ -73,7 +76,7 @@ export class HomePage implements OnInit {
     this.fireService.logout();
   }
 
-  isUserLoggedIn(): boolean {
-    return !!this.fireService.getUser();
+  isUserLoggedIn(): any {
+    return this.fireService.getUser();
   }
 }

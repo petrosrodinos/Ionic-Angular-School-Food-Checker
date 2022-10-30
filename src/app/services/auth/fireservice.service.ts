@@ -57,11 +57,7 @@ export class FireserviceService {
 
   getUser() {
     const user = this.authState.currentUser;
-    if (user) {
-      return user;
-    } else {
-      return user;
-    }
+    return user;
   }
 
   saveDetails(data: any) {
