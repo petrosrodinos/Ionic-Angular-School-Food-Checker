@@ -8,6 +8,7 @@ import { FireserviceService } from 'src/app/services/auth/fireservice.service';
 import { Food } from 'src/app/types/food';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,7 @@ export class HomePage implements OnInit {
     setTimeout(() => {
       let user = this.isUserLoggedIn();
       if (user) {
-        this.isAdmin = user.email === 'petros@gmail.com';
+        this.isAdmin = environment.adminEmails.includes(user.email);
         this.analyticsService.setUser(user.uid);
       }
     }, 1000);
