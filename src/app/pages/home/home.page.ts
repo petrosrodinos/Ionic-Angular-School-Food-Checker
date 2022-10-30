@@ -18,7 +18,7 @@ import { environment } from 'src/environments/environment';
 export class HomePage implements OnInit {
   public isLoggedIn: boolean;
   public foods: Food[] = [];
-  public loading = false;
+  public loading = true;
   public isAdmin = false;
   // auth$: Observable<boolean>;
 
@@ -49,7 +49,7 @@ export class HomePage implements OnInit {
   getFoods() {
     // return [];
     // return (this.foods = this.data.getMessages());
-    this.loading = true;
+    // this.loading = true;
     this.foodService.getFoods().subscribe(
       (res: any[]) => {
         this.foods = res;

@@ -12,7 +12,6 @@ export class DateService {
     let hours = ('0' + formatted.getHours()).slice(-2);
     let minutes = ('0' + formatted.getMinutes()).slice(-2);
     let final = [hours, minutes].join(':');
-    console.log(final);
     return final;
   }
 

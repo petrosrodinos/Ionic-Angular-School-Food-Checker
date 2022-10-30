@@ -71,7 +71,10 @@
             </ion-button>
           </ion-item>
           <br />
-          <ion-button color="primary" (click)="openCamera()"
+          <ion-button
+            class="add-photo-btn"
+            color="primary"
+            (click)="openCamera()"
             >Add Photo
             <ion-icon
               slot="start"
@@ -82,6 +85,7 @@
           <br />
           <br />
           <img
+            alt="photo of uploaded food"
             width="400"
             height="300"
             *ngIf="photo?.base64"

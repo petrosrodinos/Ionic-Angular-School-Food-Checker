@@ -9,6 +9,7 @@
       <span>{{ food.time }}</span>
     </h3>
     <img
+      class="food-image"
       *ngIf="food.photo"
       [alt]="'photo of: ' + food.firstplate + ' and ' + food.secondplate"
       [src]="food.photo"

@@ -16,10 +16,10 @@ export class PhotoService {
     const capturedPhoto = await Camera.getPhoto({
       resultType: CameraResultType.Uri,
       source: CameraSource.Camera,
-      quality: 1000,
+      quality: 100,
       allowEditing: true,
     });
-    let res = await this.readAsBase64(capturedPhoto);
+    let res = { ...(await this.readAsBase64(capturedPhoto)) };
 
     return res;
   }
