@@ -75,9 +75,14 @@ export class HomePage implements OnInit {
 
   logoutUser(): void {
     this.fireService.logout();
+    this.isAdmin = false;
   }
 
   isUserLoggedIn(): any {
     return this.fireService.getUser();
+  }
+
+  deleteOldFoods() {
+    this.foodService.deleteOldFoods();
   }
 }

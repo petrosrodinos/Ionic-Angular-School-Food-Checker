@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Food } from 'src/app/types/food';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { ToastService } from '../toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class FoodService {
     private firestore: AngularFirestore,
     private fireservice: FireserviceService,
     private dateService: DateService,
-    private fireStorage: AngularFireStorage
+    private fireStorage: AngularFireStorage,
+    public toastController: ToastService
   ) {}
 
   public async addFood(food: Food): Promise<any> {
@@ -54,10 +56,6 @@ export class FoodService {
       .valueChanges();
   }
 
-  public deleteFood(id: string): Promise<any> {
-    return this.firestore.collection('food').doc(id).delete();
-  }
-
   public async uploadPhoto(food: Food): Promise<string> {
     return this.fireStorage
       .upload(
@@ -70,6 +68,33 @@ export class FoodService {
       .toPromise()
       .then((res) => {
         return res.ref.getDownloadURL() as Promise<string>;
+      });
+  }
+
+  public deleteFood(id: string): Promise<any> {
+    return this.firestore.collection('food').doc(id).delete();
+  }
+
+  public async deleteOldFoods(): Promise<any> {
+    return this.firestore
+      .collection('food', (ref) =>
+        ref.where('date', '<', this.dateService.formatDate(new Date()))
+      )
+      .get()
+      .toPromise()
+      .then((res) => {
+        res.forEach((doc) => {
+          this.deleteFood(doc.id);
+        });
+      })
+      .catch((err) => {
+        this.toastController.presentToast(
+          'danger',
+          'Could not delete old meals'
+        );
+      })
+      .finally(() => {
+        this.toastController.presentToast('success', 'Old meals deleted');
       });
   }
 }
