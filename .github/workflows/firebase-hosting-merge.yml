@@ -1,26 +1,23 @@
-name: Firebase Deploy Prod
-
+name: Build Angular App and Deploy on Firebase
 on:
   push:
     branches:
-      - main
+      - refactor
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build & Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-
+      - name: Checkout Repo
+        uses: actions/checkout@master
       - name: Install Dependencies
-        run: |
-          sudo npm ci
-          sudo npm install -g firebase-tools
-          sudo npm install -g @angular/cli
-      - name: Build Prod App
-        run: |
-          ng build --prod
-      - name: Firebase Deploy Prod
-        run: |
-          firebase use sbd-main-blog --token ${{ secrets.FIREBASE_CI_TOKEN }}
-          firebase deploy --token ${{ secrets.FIREBASE_CI_TOKEN }} --non-interactive
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@v1.5.0
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: YOUR_FIREBASE_TOKEN_HERE
