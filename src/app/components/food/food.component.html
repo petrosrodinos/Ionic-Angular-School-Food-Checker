@@ -8,12 +8,19 @@
       ></ion-icon>
       <span>{{ food.time }}</span>
     </h3>
-    <ion-img
+    <img
+      defaultImage="../../../assets/images/food-placeholder.jpg"
+      class="food-image"
+      *ngIf="food.photo"
+      [alt]="'photo of: ' + food.firstplate + ' and ' + food.secondplate"
+      [lazyLoad]="food.photo"
+    />
+    <!-- <ion-img
       class="food-image"
       *ngIf="food.photo"
       [alt]="'photo of: ' + food.firstplate + ' and ' + food.secondplate"
       [src]="food.photo"
-    ></ion-img>
+    ></ion-img> -->
     <ion-card-header [ngClass]="!food.photo && 'food-header__container'">
       <ion-card-title
         >{{ food.firstplate }} - {{ food.secondplate }}</ion-card-title

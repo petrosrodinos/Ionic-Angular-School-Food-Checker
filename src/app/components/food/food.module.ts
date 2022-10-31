@@ -7,9 +7,16 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { FoodComponent } from './food.component';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    RouterModule,
+    LazyLoadImageModule,
+  ],
   declarations: [FoodComponent],
   exports: [FoodComponent],
 })

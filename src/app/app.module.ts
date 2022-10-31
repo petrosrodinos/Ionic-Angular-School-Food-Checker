@@ -19,6 +19,7 @@ import {
   AngularFirePerformanceModule,
   PerformanceMonitoringService,
 } from '@angular/fire/compat/performance';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [

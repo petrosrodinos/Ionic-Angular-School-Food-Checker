@@ -59,6 +59,7 @@ export class RegisterComponent implements OnDestroy {
 
   onSubmit() {
     this.isloading = true;
+    let user: any;
     this.fireService
       .signup({
         email: this.registerForm.value.email,
@@ -67,6 +68,8 @@ export class RegisterComponent implements OnDestroy {
       .then(
         (res) => {
           if (res.user.uid) {
+            // user = res.user;
+            res.user.sendEmailVerification();
             this.analyticsService.setUser(res.user.uid);
             this.analyticsService.logEvent('sign_up', { user: res.user.uid });
             let data = {
@@ -77,10 +80,14 @@ export class RegisterComponent implements OnDestroy {
             this.fireService.saveDetails(data).then(
               (res) => {
                 this.store.dispatch(logIn());
+                // user.sendEmailVerification();
+
                 this.toastController.presentToast(
                   'success',
                   'User created successfully'
                 );
+                this.registerForm.reset();
+
                 this.router.navigate(['/home']);
               },
               (err) => {

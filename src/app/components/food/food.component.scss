@@ -27,3 +27,39 @@ ion-card-header.ios {
   position: relative;
   top: -10px;
 }
+
+img.ng-lazyloading {
+  -webkit-animation: loader 2s linear;
+  animation: loader 2s linear;
+}
+
+@-webkit-keyframes loader {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loader {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// img.ng-lazyloaded {
+//   animation: fadein 1s;
+// }
+
+// @keyframes fadein {
+//   from {
+//     opacity: 0;
+//   }
+//   to {
+//     opacity: 1;
+//   }
+// }

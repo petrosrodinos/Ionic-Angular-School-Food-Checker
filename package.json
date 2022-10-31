@@ -38,6 +38,7 @@
     "@ngrx/store": "^14.3.2",
     "firebase": "^9.12.1",
     "ionicons": "^6.0.3",
+    "ng-lazyload-image": "^9.1.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
