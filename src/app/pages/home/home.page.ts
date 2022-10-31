@@ -80,7 +80,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   login(): void {
-    this.router.navigateByUrl('/auth/login');
+    this.router.navigateByUrl('/auth/login', { replaceUrl: true });
   }
 
   logoutUser(): void {
