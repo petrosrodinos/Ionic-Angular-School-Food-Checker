@@ -11,7 +11,6 @@ export class NotificationService {
   constructor(private router: Router, platform: Platform) {}
 
   initPush() {
-    console.log(Capacitor.getPlatform());
     if (Capacitor.getPlatform() !== 'web') {
       this.registerNotifications();
     }
@@ -40,7 +39,6 @@ export class NotificationService {
     PushNotifications.addListener(
       'pushNotificationActionPerformed',
       async (notification) => {
-        const data = notification.notification.data;
         this.router.navigateByUrl(`/home`);
       }
     );

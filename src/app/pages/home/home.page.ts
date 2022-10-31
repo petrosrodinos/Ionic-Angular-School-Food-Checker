@@ -1,4 +1,4 @@
-import { NotificationService } from './../../notifications/notifications.service';
+import { NotificationService } from '../../services/notifications/notifications.service';
 import { Subscription } from 'rxjs';
 import { AnalyticsService } from '../../services/analytics/analytics.service';
 import { Store } from '@ngrx/store';
