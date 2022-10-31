@@ -1,3 +1,4 @@
+import { NotificationService } from './../../notifications/notifications.service';
 import { Subscription } from 'rxjs';
 import { AnalyticsService } from '../../services/analytics/analytics.service';
 import { Store } from '@ngrx/store';
@@ -34,7 +35,8 @@ export class HomePage implements OnInit, OnDestroy {
     public storageService: StorageService,
     public analyticsService: AnalyticsService,
     private platform: Platform,
-    private routerOutlet: IonRouterOutlet
+    private routerOutlet: IonRouterOutlet,
+    private notificationService: NotificationService
   ) {
     this.platform.backButton.subscribeWithPriority(-1, () => {
       if (!this.routerOutlet.canGoBack()) {
@@ -46,6 +48,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.getFoods();
+    this.notificationService.initPush();
     setTimeout(() => {
       let user = this.isUserLoggedIn();
       if (user) {
