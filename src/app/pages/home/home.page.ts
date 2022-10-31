@@ -61,7 +61,6 @@ export class HomePage implements OnInit {
         this.loading = false;
       }
     );
-    this.loading = false;
   }
 
   refresh(ev: any) {

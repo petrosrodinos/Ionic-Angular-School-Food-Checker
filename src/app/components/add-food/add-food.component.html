@@ -7,7 +7,11 @@
         </ion-buttons>
 
         <ion-buttons slot="end">
-          <ion-button color="primary" (click)="addFood(modal)" [strong]="true"
+          <ion-button
+            [disabled]="loading"
+            color="primary"
+            (click)="addFood(modal)"
+            [strong]="true"
             >Add</ion-button
           >
         </ion-buttons>

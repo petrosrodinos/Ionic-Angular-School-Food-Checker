@@ -4,9 +4,18 @@
   
   -->
 <div class="auth-container">
-  <br />
-  <br />
-  <br />
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button color="primary" default-href="#"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Back</ion-title>
+      <ion-progress-bar
+        *ngIf="isloading"
+        type="indeterminate"
+      ></ion-progress-bar>
+    </ion-toolbar>
+  </ion-header>
   <ion-card>
     <form>
       <ion-card-header>
@@ -72,7 +81,11 @@
         </ion-item>
         <br />
 
-        <ion-button type="button" (click)="onSubmit()" expand="block"
+        <ion-button
+          [disabled]="isloading"
+          type="button"
+          (click)="onSubmit()"
+          expand="block"
           >Register
         </ion-button>
       </ion-list>

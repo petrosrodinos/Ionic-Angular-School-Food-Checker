@@ -22,7 +22,7 @@ export class RegisterComponent implements OnInit {
   public username: string = '';
   public password: string = '';
   public email: string = '';
-  public isLoading = false;
+  public isloading = false;
 
   constructor(
     public fireService: FireserviceService,
@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   onSubmit(form: any) {
-    this.store.dispatch(authAction());
+    this.isloading = true;
     this.fireService
       .signup({ email: this.email, password: this.password })
       .then(
@@ -53,22 +53,21 @@ export class RegisterComponent implements OnInit {
                   'success',
                   'User created successfully'
                 );
-                this.isLoading = false;
                 this.router.navigate(['/home']);
               },
               (err) => {
                 this.toastController.presentToast('primary', err.message);
-                this.isLoading = false;
               }
             );
           }
         },
         (err) => {
           this.toastController.presentToast('primary', err.message);
-          this.isLoading = false;
         }
-      );
-    this.store.dispatch(authAction());
+      )
+      .finally(() => {
+        this.isloading = false;
+      });
   }
 
   ngOnInit() {}

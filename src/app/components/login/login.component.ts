@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
 
   public email: string = '';
   public password: string = '';
+  public isloading = false;
 
   constructor(
     public fireService: FireserviceService,
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   onSubmit(form: any) {
-    this.store.dispatch(authAction());
+    this.isloading = true;
     this.fireService
       .loginWithEmail({ email: this.email, password: this.password })
       .then(
@@ -63,8 +64,10 @@ export class LoginComponent implements OnInit {
         (err) => {
           this.toastController.presentToast('primary', err.message);
         }
-      );
-    this.store.dispatch(authAction());
+      )
+      .finally(() => {
+        this.isloading = false;
+      });
   }
 
   ngOnInit() {}

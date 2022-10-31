@@ -29,7 +29,7 @@ export class AddFoodComponent implements OnInit {
   secondplate = '';
   description = '';
   photo: FoodPhoto;
-  loading: boolean;
+  loading = false;
   auth: boolean = false;
 
   constructor(
@@ -80,7 +80,6 @@ export class AddFoodComponent implements OnInit {
         this.foodService
           .addFood(food)
           .then((res) => {
-            this.loading = false;
             this.toastController.presentToast(
               'success',
               'Meal added successfully'
@@ -89,8 +88,10 @@ export class AddFoodComponent implements OnInit {
             this.resetFields(modal);
           })
           .catch((err) => {
-            this.loading = false;
             this.toastController.presentToast('primary', 'Could not add meal');
+          })
+          .finally(() => {
+            this.loading = false;
           });
       })
       .catch((err) => {
@@ -100,7 +101,6 @@ export class AddFoodComponent implements OnInit {
           'Please log in to continue'
         );
       });
-    this.loading = false;
   }
 
   resetFields(modal: any) {
