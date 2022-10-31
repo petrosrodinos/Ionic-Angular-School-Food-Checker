@@ -59,9 +59,9 @@ export class FoodService {
   public async uploadPhoto(food: Food): Promise<string> {
     return this.fireStorage
       .upload(
-        `meals/${new Date().toDateString().split(' ').concat('-')}_${
-          food.firstplate
-        }-${food.secondplate}`,
+        `meals/${this.dateService.formatDate(new Date())}_${food.firstplate}-${
+          food.secondplate
+        }`,
         food.photo.blob
       )
       .snapshotChanges()
