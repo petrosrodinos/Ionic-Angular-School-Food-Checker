@@ -3,8 +3,12 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="resetFields(); modal.dismiss()"
-            >Close</ion-button
+          <ion-button (click)="resetFields(modal)">Close</ion-button>
+        </ion-buttons>
+
+        <ion-buttons slot="end">
+          <ion-button color="primary" (click)="addFood(modal)" [strong]="true"
+            >Add</ion-button
           >
         </ion-buttons>
         <ion-title>Add today's meal</ion-title>
@@ -12,11 +16,6 @@
           *ngIf="loading"
           type="indeterminate"
         ></ion-progress-bar>
-        <ion-buttons slot="end">
-          <ion-button color="primary" (click)="addFood()" [strong]="true"
-            >Add</ion-button
-          >
-        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">

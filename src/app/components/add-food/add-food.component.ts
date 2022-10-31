@@ -9,6 +9,7 @@ import { PhotoService } from 'src/app/services/photo/photo.service';
 import { FoodPhoto } from 'src/app/types/food';
 import { DateService } from 'src/app/services/date/date.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
+import { modalController } from '@ionic/core';
 @Component({
   selector: 'app-add-food',
   templateUrl: './add-food.component.html',
@@ -51,13 +52,13 @@ export class AddFoodComponent implements OnInit {
 
   async openCamera(): Promise<void> {
     this.photo = await this.photoService.openCamera();
-    console.log(this.photo);
   }
 
-  addFood(): void {
-    if (!this.dateService.canAddFood()) {
+  addFood(modal: any): void {
+    if (this.dateService.canAddFood()) {
       this.analyticsService.logEvent('add_food_wrong_time', {
         time: this.dateService.formatTime(new Date()),
+        date: this.dateService.formatDate(new Date()),
       });
       this.toastController.presentToast(
         'primary',
@@ -84,8 +85,8 @@ export class AddFoodComponent implements OnInit {
               'success',
               'Meal added successfully'
             );
-            this.resetFields();
             this.analyticsService.logEvent('add_food', { user: val.uid });
+            this.resetFields(modal);
           })
           .catch((err) => {
             this.loading = false;
@@ -102,10 +103,11 @@ export class AddFoodComponent implements OnInit {
     this.loading = false;
   }
 
-  resetFields() {
+  resetFields(modal: any) {
     this.firstplate = '';
     this.secondplate = '';
     this.description = '';
     this.photo = null;
+    modal.dismiss();
   }
 }
