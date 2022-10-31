@@ -1,28 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { authAction, logIn } from 'src/app/ngrx/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/ngrx/app.state';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
+import { NgTemplateOutlet } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  login = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
-  });
-
-  public email: string = '';
-  public password: string = '';
+export class LoginComponent implements OnInit, OnDestroy {
   public isloading = false;
+  loginForm: FormGroup;
+  email: FormControl;
+  password: FormControl;
+  public loginSub: Subscription;
 
   constructor(
     public fireService: FireserviceService,
@@ -33,10 +31,36 @@ export class LoginComponent implements OnInit {
     private analyticsService: AnalyticsService
   ) {}
 
-  onSubmit(form: any) {
+  ngOnInit() {
+    this.createFormControls();
+    this.createForm();
+  }
+
+  createFormControls() {
+    this.email = new FormControl('', [
+      Validators.required,
+      Validators.pattern('[^ @]*@[^ @]*'),
+    ]);
+    this.password = new FormControl('', [
+      Validators.required,
+      Validators.minLength(7),
+    ]);
+  }
+
+  createForm() {
+    this.loginForm = new FormGroup({
+      email: this.email,
+      password: this.password,
+    });
+  }
+
+  onSubmit() {
     this.isloading = true;
     this.fireService
-      .loginWithEmail({ email: this.email, password: this.password })
+      .loginWithEmail({
+        email: this.loginForm.value.email,
+        password: this.loginForm.value.password,
+      })
       .then(
         (res) => {
           if (res.user.uid) {
@@ -45,20 +69,21 @@ export class LoginComponent implements OnInit {
               user: res.user.uid,
             });
 
-            this.fireService.getDetails({ uid: res.user.uid }).subscribe(
-              (res) => {
-                this.store.dispatch(logIn());
-                this.storage.set('user', res);
-                this.toastController.presentToast(
-                  'success',
-                  'Welcome ' + res['username']
-                );
-                this.router.navigate(['/home']);
-              },
-              (err) => {
-                this.toastController.presentToast('primary', err.message);
-              }
-            );
+            this.loginSub = this.fireService
+              .getDetails({ uid: res.user.uid })
+              .subscribe(
+                (res) => {
+                  this.storage.set('user', res);
+                  this.toastController.presentToast(
+                    'success',
+                    'Welcome ' + res['username']
+                  );
+                  this.router.navigate(['/home']);
+                },
+                (err) => {
+                  this.toastController.presentToast('primary', err.message);
+                }
+              );
           }
         },
         (err) => {
@@ -67,8 +92,12 @@ export class LoginComponent implements OnInit {
       )
       .finally(() => {
         this.isloading = false;
+        this.loginForm.reset();
       });
   }
 
-  ngOnInit() {}
+  ngOnDestroy() {
+    this.loginForm.reset();
+    this.loginSub.unsubscribe();
+  }
 }

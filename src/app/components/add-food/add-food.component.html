@@ -8,7 +8,7 @@
 
         <ion-buttons slot="end">
           <ion-button
-            [disabled]="loading"
+            [disabled]="loading || !this.foodForm.valid"
             color="primary"
             (click)="addFood(modal)"
             [strong]="true"
@@ -23,16 +23,25 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <form>
+      <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
         <ion-list>
           <ion-item>
             <ion-input
-              value="fakes"
-              [(ngModel)]="firstplate"
-              name="firstplate"
+              formControlName="firstplate"
               type="text"
               placeholder="First Plate"
             ></ion-input>
+            <ion-note
+              *ngIf="
+                foodForm.get('firstplate').touched ||
+                (foodForm.get('firstplate').focus &&
+                  foodForm.get('firstplate').hasError('required')) ||
+                foodForm.get('firstplate').hasError('minLength') ||
+                foodForm.get('firstplate').hasError('maxLength')
+              "
+              slot="error"
+              >Invalid first plate value</ion-note
+            >
             <ion-button slot="end" fill="clear">
               <ion-icon
                 name="fast-food-outline"
@@ -44,12 +53,21 @@
           <br />
           <ion-item>
             <ion-input
-              value="mpiftekia"
-              [(ngModel)]="secondplate"
-              name="secondplate"
+              formControlName="secondplate"
               type="text"
               placeholder="Second Plate"
             ></ion-input>
+            <ion-note
+              *ngIf="
+                foodForm.get('secondplate').touched ||
+                (foodForm.get('secondplate').focus &&
+                  foodForm.get('secondplate').hasError('required')) ||
+                foodForm.get('secondplate').hasError('minLength') ||
+                foodForm.get('secondplate').hasError('maxLength')
+              "
+              slot="error"
+              >Invalid second plate value</ion-note
+            >
             <ion-button slot="end" fill="clear">
               <ion-icon
                 name="pizza-outline"
@@ -60,12 +78,21 @@
           </ion-item>
           <ion-item>
             <ion-textarea
-              name="description"
               placeholder="Description"
+              formControlName="description"
               [autoGrow]="true"
-              [(ngModel)]="description"
             >
             </ion-textarea>
+            <ion-note
+              *ngIf="
+                foodForm.get('description').touched ||
+                (foodForm.get('description').focus &&
+                  foodForm.get('description').hasError('minLength')) ||
+                  foodForm.get('description').hasError('maxLength')
+              "
+              slot="error"
+              >Invalid description value</ion-note
+            >
             <ion-button slot="end" fill="clear" class="description-icon">
               <ion-icon
                 name="document-text-outline"

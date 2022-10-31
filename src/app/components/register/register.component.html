@@ -1,13 +1,12 @@
-<!-- [formGroup]="register"
-    (ngSubmit)="onSubmit()"
-  [formControl]="register.controls['username']"
-  
-  -->
 <div class="auth-container">
   <ion-header [translucent]="true">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button color="primary" default-href="#"></ion-back-button>
+        <ion-back-button
+          color="primary"
+          (click)="router.navigate(['/home'])"
+          default-href="#"
+        ></ion-back-button>
       </ion-buttons>
       <ion-title>Back</ion-title>
       <ion-progress-bar
@@ -17,7 +16,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-card>
-    <form>
+    <form autocomplete="off" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <ion-card-header>
         <ion-card-title>Register</ion-card-title>
       </ion-card-header>
@@ -25,17 +24,21 @@
         <ion-item>
           <ion-input
             type="text"
-            name="username"
-            [(ngModel)]="username"
+            formControlName="username"
             placeholder="Username"
             autocomplete="username"
           ></ion-input>
-          <!-- <div
-            class="input-error"
-            *ngIf="register.get('username').hasError('required')"
+          <ion-note
+            *ngIf="
+              (registerForm.get('username').touched ||
+                registerForm.get('username').focus) &&
+              (registerForm.get('username').hasError('required') ||
+                registerForm.get('username').hasError('minLength') ||
+                registerForm.get('username').hasError('maxLength'))
+            "
+            slot="error"
+            >Invalid username</ion-note
           >
-            Required
-          </div> -->
           <ion-button slot="end" fill="clear">
             <ion-icon
               class="input-icon"
@@ -48,11 +51,19 @@
         <ion-item>
           <ion-input
             autocomplete="email"
-            name="email"
-            [(ngModel)]="email"
+            formControlName="email"
             type="email"
             placeholder="Email"
           ></ion-input>
+          <ion-note
+            *ngIf="
+              (registerForm.get('email').touched &&
+                registerForm.get('email').hasError('required')) ||
+              registerForm.get('email').hasError('pattern')
+            "
+            slot="error"
+            >Invalid email</ion-note
+          >
           <ion-button slot="end" fill="clear">
             <ion-icon
               name="mail-outline"
@@ -66,11 +77,20 @@
         <ion-item>
           <ion-input
             autocomplete="password"
-            name="password"
-            [(ngModel)]="password"
+            formControlName="password"
             placeholder="Password"
             type="password"
           ></ion-input>
+          <ion-note
+            *ngIf="
+              registerForm.get('password').touched ||
+              (registerForm.get('password').focus &&
+                registerForm.get('password').hasError('required') &&
+                registerForm.get('password').hasError('minLength'))
+            "
+            slot="error"
+            >Invalid Password</ion-note
+          >
           <ion-button slot="end" fill="clear">
             <ion-icon
               class="input-icon"
@@ -82,9 +102,8 @@
         <br />
 
         <ion-button
-          [disabled]="isloading"
-          type="button"
-          (click)="onSubmit()"
+          [disabled]="isloading || !this.registerForm.valid"
+          type="submit"
           expand="block"
           >Register
         </ion-button>

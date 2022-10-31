@@ -2,7 +2,11 @@
   <ion-header [translucent]="true">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button color="primary" default-href="#"></ion-back-button>
+        <ion-back-button
+          color="primary"
+          (click)="router.navigate(['/home'])"
+          default-href="#"
+        ></ion-back-button>
       </ion-buttons>
       <ion-title>Back</ion-title>
       <ion-progress-bar
@@ -12,7 +16,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-card>
-    <form>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <ion-card-header>
         <ion-card-title>Login</ion-card-title>
       </ion-card-header>
@@ -20,11 +24,19 @@
         <ion-item>
           <ion-input
             autocomplete="email"
-            name="email"
-            [(ngModel)]="email"
+            formControlName="email"
             type="email"
             placeholder="Email"
           ></ion-input>
+          <ion-note
+            *ngIf="
+              loginForm.get('email').touched &&
+              loginForm.get('email').hasError('required')
+            "
+            slot="error"
+            >Invalid email</ion-note
+          >
+
           <ion-button slot="end" fill="clear">
             <ion-icon
               name="mail-outline"
@@ -33,16 +45,25 @@
             ></ion-icon>
           </ion-button>
         </ion-item>
+
         <br />
 
         <ion-item>
           <ion-input
             name="password"
-            autocomplete="password"
-            [(ngModel)]="password"
+            formControlName="password"
             placeholder="Password"
             type="password"
           ></ion-input>
+          <ion-note
+            *ngIf="
+              loginForm.get('password').touched &&
+              loginForm.get('password').hasError('required') &&
+              loginForm.get('password').hasError('minlength')
+            "
+            slot="error"
+            >Invalid Password</ion-note
+          >
           <ion-button slot="end" fill="clear">
             <ion-icon
               class="input-icon"
@@ -54,8 +75,8 @@
         <br />
 
         <ion-button
-          [disabled]="isloading"
-          type="button"
+          [disabled]="isloading || !this.loginForm.valid"
+          type="submit"
           (click)="onSubmit()"
           expand="block"
           >Login</ion-button

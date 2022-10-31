@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { selectLoading } from 'src/app/ngrx/food/food.selectors';
 import { FoodService } from 'src/app/services/food/food.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { PhotoService } from 'src/app/services/photo/photo.service';
 import { FoodPhoto } from 'src/app/types/food';
 import { DateService } from 'src/app/services/date/date.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { modalController } from '@ionic/core';
 @Component({
   selector: 'app-add-food',
   templateUrl: './add-food.component.html',
@@ -18,16 +16,11 @@ import { modalController } from '@ionic/core';
 export class AddFoodComponent implements OnInit {
   // @Input() onAddFood: (food: Food) => void;
 
-  addFoodForm = new FormGroup({
-    firstplate: new FormControl(''),
-    secondplate: new FormControl(''),
-    description: new FormControl(''),
-  });
-
   presentingElement = null;
-  firstplate = '';
-  secondplate = '';
-  description = '';
+  foodForm: FormGroup;
+  firstplate: FormControl;
+  secondplate: FormControl;
+  description: FormControl;
   photo: FoodPhoto;
   loading = false;
   auth: boolean = false;
@@ -42,12 +35,35 @@ export class AddFoodComponent implements OnInit {
     private analyticsService: AnalyticsService
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     this.presentingElement = document.querySelector('.ion-page');
-    // this.store.select(selectLoading).subscribe((res) => {
-    //   console.log(res);
-    //   this.loading = res;
-    // });
+    this.createFormControls();
+    this.createForm();
+  }
+
+  createFormControls() {
+    this.firstplate = new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+      Validators.maxLength(30),
+    ]);
+    this.secondplate = new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+      Validators.maxLength(30),
+    ]);
+    this.description = new FormControl('', [
+      Validators.minLength(10),
+      Validators.maxLength(100),
+    ]);
+  }
+
+  createForm() {
+    this.foodForm = new FormGroup({
+      firstplate: this.firstplate,
+      secondplate: this.secondplate,
+      description: this.description,
+    });
   }
 
   async openCamera(): Promise<void> {
@@ -55,7 +71,7 @@ export class AddFoodComponent implements OnInit {
   }
 
   addFood(modal: any): void {
-    if (this.dateService.canAddFood()) {
+    if (!this.dateService.canAddFood()) {
       this.analyticsService.logEvent('add_food_wrong_time', {
         time: this.dateService.formatTime(new Date()),
         date: this.dateService.formatDate(new Date()),
@@ -71,9 +87,9 @@ export class AddFoodComponent implements OnInit {
       .get('user')
       .then((val: any) => {
         let food = {
-          firstplate: this.firstplate,
-          secondplate: this.secondplate,
-          description: this.description,
+          firstplate: this.foodForm.value.firstplate,
+          secondplate: this.foodForm.value.secondplate,
+          description: this.foodForm.value.description,
           username: val.username,
           photo: this.photo,
         };
@@ -104,11 +120,7 @@ export class AddFoodComponent implements OnInit {
   }
 
   resetFields(modal: any) {
-    this.firstplate = '';
-    this.secondplate = '';
-    this.description = '';
-    this.photo = null;
-    this.loading = false;
+    this.foodForm.reset();
     modal.dismiss();
   }
 }

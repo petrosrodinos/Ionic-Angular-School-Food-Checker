@@ -1,8 +1,8 @@
+import { Subscription } from 'rxjs';
 import { AnalyticsService } from '../../services/analytics/analytics.service';
 import { Store } from '@ngrx/store';
 import { FoodService } from 'src/app/services/food/food.service';
-import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
 import { Food } from 'src/app/types/food';
@@ -15,7 +15,8 @@ import { environment } from 'src/environments/environment';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
+  public foodSub: Subscription;
   public isLoggedIn: boolean;
   public foods: Food[] = [];
   public loading = true;
@@ -23,7 +24,6 @@ export class HomePage implements OnInit {
   // auth$: Observable<boolean>;
 
   constructor(
-    private data: DataService,
     private router: Router,
     private fireService: FireserviceService,
     public foodService: FoodService,
@@ -48,9 +48,8 @@ export class HomePage implements OnInit {
 
   getFoods() {
     // return [];
-    // return (this.foods = this.data.getMessages());
     this.loading = true;
-    this.foodService.getFoods().subscribe(
+    this.foodSub = this.foodService.getFoods().subscribe(
       (res: any[]) => {
         this.foods = res;
         this.loading = false;
@@ -83,5 +82,9 @@ export class HomePage implements OnInit {
 
   deleteOldFoods() {
     this.foodService.deleteOldFoods();
+  }
+
+  ngOnDestroy() {
+    this.foodSub.unsubscribe();
   }
 }
