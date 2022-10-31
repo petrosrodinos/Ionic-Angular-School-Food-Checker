@@ -26,7 +26,11 @@ export class DateService {
   canAddFood = () => {
     const now = new Date();
     let time = now.getHours();
+    let minutes = now.getMinutes();
     if ((time >= 12 && time <= 16) || (time >= 19 && time <= 22)) {
+      if ((time == 16 && minutes > 0) || (time == 22 && minutes > 0)) {
+        return false;
+      }
       return true;
     } else {
       return false;

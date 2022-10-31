@@ -1,29 +1,29 @@
-name: Build Ionic/Angular App and Deploy on Firebase
-on:
-  push:
-    branches:
-      - main
+# name: Build Ionic/Angular App and Deploy on Firebase
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build:
-    name: Build & Deploy
-    runs-on: ubuntu-latest
-    container: node:16.10-alpine
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+# jobs:
+#   build:
+#     name: Build & Deploy
+#     runs-on: ubuntu-latest
+#     container: node:16.10-alpine
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
-      - name: Specify node version
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.17.0
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@v1.5.0
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{secrets.FIREBASE_SERVICE_ACCOUNT_FOODCHECKER_607A7}}
+#       - name: Install Dependencies
+#         run: npm install
+#       - name: Build
+#         run: npm run build
+#       - name: Specify node version
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 16.17.0
+#       - name: Deploy to Firebase
+#         uses: w9jds/firebase-action@v1.5.0
+#         with:
+#           args: deploy --only hosting
+#         env:
+#           FIREBASE_TOKEN: ${{secrets.FIREBASE_SERVICE_ACCOUNT_FOODCHECKER_607A7}}
