@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ToastService } from 'src/app/services/toast/toast.service';
@@ -13,7 +13,7 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
   templateUrl: './add-food.component.html',
   styleUrls: ['./add-food.component.scss'],
 })
-export class AddFoodComponent implements OnInit {
+export class AddFoodComponent implements OnInit, OnDestroy {
   // @Input() onAddFood: (food: Food) => void;
 
   presentingElement = null;
@@ -122,5 +122,9 @@ export class AddFoodComponent implements OnInit {
   resetFields(modal: any) {
     this.foodForm.reset();
     modal.dismiss();
+  }
+
+  ngOnDestroy() {
+    this.foodForm.reset();
   }
 }
