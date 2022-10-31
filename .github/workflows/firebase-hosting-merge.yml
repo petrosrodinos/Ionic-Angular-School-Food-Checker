@@ -12,14 +12,15 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-      # - name: Specify node version
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16.17.0
+
       - name: Install Dependencies
         run: npm install
       - name: Build
         run: npm run build
+      - name: Specify node version
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.17.0
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@v1.5.0
         with:
