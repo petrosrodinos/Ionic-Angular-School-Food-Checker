@@ -1,4 +1,4 @@
-name: Build Angular App and Deploy on Firebase
+name: Build Ionic/Angular App and Deploy on Firebase
 on:
   push:
     branches:
@@ -20,4 +20,4 @@ jobs:
         with:
           args: deploy --only hosting
         env:
-          FIREBASE_TOKEN: YOUR_FIREBASE_TOKEN_HERE
+          FIREBASE_TOKEN: ${{secrets.FIREBASE_SERVICE_ACCOUNT_FOODCHECKER_607A7}}
