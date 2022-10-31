@@ -73,12 +73,15 @@ export class LoginComponent implements OnInit, OnDestroy {
               .getDetails({ uid: res.user.uid })
               .subscribe(
                 (res) => {
-                  this.storage.set('user', res);
-                  this.toastController.presentToast(
-                    'success',
-                    'Welcome ' + res['username']
-                  );
-                  this.router.navigate(['/home']);
+                  if (this.fireService.getUser()) {
+                    this.storage.set('user', res);
+                    this.toastController.presentToast(
+                      'success',
+                      'Welcome ' + res['username']
+                    );
+                    this.loginSub.unsubscribe();
+                    this.router.navigate(['/home']);
+                  }
                 },
                 (err) => {
                   this.toastController.presentToast('primary', err.message);
@@ -97,7 +100,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.loginForm.reset();
     this.loginSub.unsubscribe();
   }
 }

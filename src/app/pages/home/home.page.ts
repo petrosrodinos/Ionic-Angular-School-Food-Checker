@@ -9,6 +9,8 @@ import { Food } from 'src/app/types/food';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { environment } from 'src/environments/environment';
+import { IonRouterOutlet, Platform } from '@ionic/angular';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-home',
@@ -30,8 +32,15 @@ export class HomePage implements OnInit, OnDestroy {
     public toastController: ToastService,
     public store: Store,
     public storageService: StorageService,
-    public analyticsService: AnalyticsService
+    public analyticsService: AnalyticsService,
+    private platform: Platform,
+    private routerOutlet: IonRouterOutlet
   ) {
+    this.platform.backButton.subscribeWithPriority(-1, () => {
+      if (!this.routerOutlet.canGoBack()) {
+        App.exitApp();
+      }
+    });
     // this.auth$ = this.store.select(getAuthState);
   }
 
