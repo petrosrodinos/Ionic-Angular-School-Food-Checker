@@ -108,6 +108,7 @@ export class AddFoodComponent implements OnInit {
     this.secondplate = '';
     this.description = '';
     this.photo = null;
+    this.loading = false;
     modal.dismiss();
   }
 }

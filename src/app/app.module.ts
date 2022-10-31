@@ -6,7 +6,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { authReducer } from './ngrx/auth/auth.reducer';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { AppComponent } from './app.component';
@@ -34,6 +34,7 @@ import {
     CommonModule,
     AuthModule,
     AngularFirePerformanceModule,
+    AngularFirestoreModule.enablePersistence(),
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

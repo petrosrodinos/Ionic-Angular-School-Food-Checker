@@ -6,7 +6,12 @@ ion-card-header.ios {
 .food-image {
   object-fit: cover;
   width: 100%;
-  height: 420px;
+  height: 400px;
+}
+
+.food-image__alt {
+  width: 100%;
+  height: auto;
 }
 
 .food-date__text {
