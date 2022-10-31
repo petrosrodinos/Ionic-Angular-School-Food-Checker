@@ -29,8 +29,8 @@ ion-card-header.ios {
 }
 
 img.ng-lazyloading {
-  -webkit-animation: loader 2s linear;
-  animation: loader 2s linear;
+  -webkit-animation: loader 5s linear infinite;
+  animation: loader 5s linear infinite;
 }
 
 @-webkit-keyframes loader {

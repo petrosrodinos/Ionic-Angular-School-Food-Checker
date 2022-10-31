@@ -69,7 +69,7 @@ export class RegisterComponent implements OnDestroy {
         (res) => {
           if (res.user.uid) {
             // user = res.user;
-            res.user.sendEmailVerification();
+            // res.user.sendEmailVerification();
             this.analyticsService.setUser(res.user.uid);
             this.analyticsService.logEvent('sign_up', { user: res.user.uid });
             let data = {
