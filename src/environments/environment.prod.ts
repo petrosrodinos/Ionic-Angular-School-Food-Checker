@@ -10,4 +10,8 @@ export const environment = {
     measurementId: 'G-0LYTDTK6TZ',
   },
   adminEmails: ['petros@gmail.com', 'petros1petros2@gmail.com'],
+  admob: {
+    ios: 'ca-app-pub-7268165775797379/9722264236',
+    android: 'ca-app-pub-7268165775797379/9722264236',
+  },
 };

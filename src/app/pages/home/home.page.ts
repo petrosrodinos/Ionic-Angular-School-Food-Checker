@@ -1,3 +1,4 @@
+import { AdmobService } from './../../services/admob/admob.service';
 import { NotificationService } from '../../services/notifications/notifications.service';
 import { Subscription } from 'rxjs';
 import { AnalyticsService } from '../../services/analytics/analytics.service';
@@ -36,7 +37,8 @@ export class HomePage implements OnInit, OnDestroy {
     public analyticsService: AnalyticsService,
     private platform: Platform,
     private routerOutlet: IonRouterOutlet,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private admobService: AdmobService
   ) {
     this.platform.backButton.subscribeWithPriority(-1, () => {
       if (!this.routerOutlet.canGoBack()) {
@@ -47,6 +49,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.admobService.showBanner();
     this.getFoods();
     this.notificationService.initPush();
     setTimeout(() => {

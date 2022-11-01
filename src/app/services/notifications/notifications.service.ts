@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private router: Router, platform: Platform) {}
+  constructor(private router: Router) {}
 
   initPush() {
     if (Capacitor.getPlatform() !== 'web') {
