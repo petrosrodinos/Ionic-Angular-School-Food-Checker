@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'io.rodinos.foodchecker',
   appName: 'foodchecker',
   webDir: 'www',
   bundledWebRuntime: false,
@@ -12,6 +12,11 @@ const config: CapacitorConfig = {
       androidScaleType: 'CENTER_CROP',
       splashImmersive: true,
       backgroundColor: '#ffffff',
+      androidSplashResourceName: 'splash',
+      showSpinner: true,
+      androidSpinnerStyle: 'large',
+      spinnerColor: '#eb445a',
+      iosSpinnerStyle: 'large',
     },
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
