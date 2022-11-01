@@ -1,6 +1,17 @@
+@import "../../../global.scss";
+
 ion-card-header.ios {
   display: flex;
   flex-flow: column-reverse;
+}
+
+.card-title {
+  position: relative;
+  left: -20px;
+}
+
+.card-title ul li::marker {
+  color: $primary-color;
 }
 
 .food-image {

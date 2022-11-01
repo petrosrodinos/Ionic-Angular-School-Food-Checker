@@ -16,9 +16,16 @@
       [lazyLoad]="food.photo"
     />
     <ion-card-header [ngClass]="!food.photo && 'food-header__container'">
-      <ion-card-title
-        >{{ food.firstplate }} - {{ food.secondplate }}</ion-card-title
-      >
+      <ion-card-title class="card-title">
+        <ul>
+          <li>
+            <label>{{ food.firstplate }}</label>
+          </li>
+          <li>
+            <label>{{ food.secondplate }}</label>
+          </li>
+        </ul>
+      </ion-card-title>
       <ion-card-subtitle>@{{ food.username || food.userId }}</ion-card-subtitle>
     </ion-card-header>
 
