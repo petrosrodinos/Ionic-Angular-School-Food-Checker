@@ -33,6 +33,9 @@
       ></ion-col>
     </ion-row>
   </ion-grid>
+
+  <app-loading-content [loading]="loading"></app-loading-content>
+
   <div class="no-data__container" *ngIf="!loading && foods.length==0">
     <h2>There are no data inserted yet :(</h2>
   </div>
