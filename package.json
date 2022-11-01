@@ -1,7 +1,7 @@
 {
   "name": "foodchecker",
   "version": "0.0.1",
-  "author": "Ionic Framework",
+  "author": "Petros Rodinos",
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
