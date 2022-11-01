@@ -15,11 +15,11 @@ import {
 })
 export class AdmobService {
   constructor() {
-    this.initialize();
+    // this.initialize();
   }
 
   async initialize(): Promise<void> {
-    AdMob.initialize({
+    await AdMob.initialize({
       requestTrackingAuthorization: true,
       testingDevices: ['testingdevice234'],
       initializeForTesting: true,
@@ -27,10 +27,6 @@ export class AdmobService {
   }
 
   async showBanner(): Promise<void> {
-    AdMob.addListener(BannerAdPluginEvents.Loaded, () => {
-      console.log('Banner loaded');
-    });
-
     const adId =
       Capacitor.getPlatform() === 'ios'
         ? environment.admob.ios
@@ -44,6 +40,6 @@ export class AdmobService {
       isTesting: true,
       // npa: true
     };
-    AdMob.showBanner(options);
+    await AdMob.showBanner(options);
   }
 }

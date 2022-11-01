@@ -41,6 +41,7 @@ export class HomePage implements OnInit, OnDestroy {
     private admobService: AdmobService
   ) {
     this.platform.backButton.subscribeWithPriority(-1, () => {
+      this.admobService.initialize();
       if (!this.routerOutlet.canGoBack()) {
         App.exitApp();
       }
@@ -49,7 +50,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.admobService.showBanner();
+    await this.admobService.showBanner();
     this.getFoods();
     this.notificationService.initPush();
     setTimeout(() => {
