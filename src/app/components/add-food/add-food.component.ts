@@ -83,7 +83,7 @@ export class AddFoodComponent implements OnInit, OnDestroy {
   }
 
   addFood(modal: any): void {
-    if (this.dateService.canAddFood()) {
+    if (!this.dateService.canAddFood()) {
       this.analyticsService.logEvent('add_food_wrong_time', {
         time: this.dateService.formatTime(new Date()),
         date: this.dateService.formatDate(new Date()),
