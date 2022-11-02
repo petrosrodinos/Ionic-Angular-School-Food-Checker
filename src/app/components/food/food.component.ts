@@ -49,9 +49,4 @@ export class FoodComponent implements OnInit {
     );
     this.loading = false;
   }
-
-  isIos() {
-    const win = window as any;
-    return win && win.Ionic && win.Ionic.mode === 'ios';
-  }
 }

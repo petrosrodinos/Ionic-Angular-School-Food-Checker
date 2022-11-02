@@ -29,7 +29,7 @@
             <ion-input
               formControlName="firstplate"
               type="text"
-              placeholder="First Plate"
+              placeholder="*First Plate"
             ></ion-input>
             <ion-note
               *ngIf="
@@ -37,7 +37,8 @@
                 (foodForm.get('firstplate').focus &&
                   foodForm.get('firstplate').hasError('required')) ||
                 foodForm.get('firstplate').hasError('minLength') ||
-                foodForm.get('firstplate').hasError('maxLength')
+                foodForm.get('firstplate').hasError('maxLength') ||
+                foodForm.get('firstplate').hasError('invalidCharacters')
               "
               slot="error"
               >Invalid first plate value</ion-note
@@ -55,7 +56,7 @@
             <ion-input
               formControlName="secondplate"
               type="text"
-              placeholder="Second Plate"
+              placeholder="*Second Plate"
             ></ion-input>
             <ion-note
               *ngIf="
@@ -63,7 +64,8 @@
                 (foodForm.get('secondplate').focus &&
                   foodForm.get('secondplate').hasError('required')) ||
                 foodForm.get('secondplate').hasError('minLength') ||
-                foodForm.get('secondplate').hasError('maxLength')
+                foodForm.get('secondplate').hasError('maxLength') ||
+                foodForm.get('secondplate').hasError('invalidCharacters')
               "
               slot="error"
               >Invalid second plate value</ion-note
@@ -71,6 +73,31 @@
             <ion-button slot="end" fill="clear">
               <ion-icon
                 name="pizza-outline"
+                color="primary"
+                class="input-icon"
+              ></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              formControlName="dessert"
+              type="text"
+              placeholder="Dessert"
+            ></ion-input>
+            <ion-note
+              *ngIf="
+                foodForm.get('dessert').touched ||
+                (foodForm.get('dessert').focus &&
+                  foodForm.get('dessert').hasError('minLength')) ||
+                foodForm.get('dessert').hasError('maxLength') ||
+                foodForm.get('dessert').hasError('invalidCharacters')
+              "
+              slot="error"
+              >Invalid dessert value</ion-note
+            >
+            <ion-button slot="end" fill="clear">
+              <ion-icon
+                name="cake-outline"
                 color="primary"
                 class="input-icon"
               ></ion-icon>
@@ -88,17 +115,18 @@
                 foodForm.get('description').touched ||
                 (foodForm.get('description').focus &&
                   foodForm.get('description').hasError('minLength')) ||
-                  foodForm.get('description').hasError('maxLength')
+                foodForm.get('description').hasError('maxLength') ||
+                foodForm.get('description').hasError('invalidCharacters')
               "
               slot="error"
               >Invalid description value</ion-note
             >
-            <ion-button slot="end" fill="clear" class="description-icon">
+            <!-- <ion-button slot="end" fill="clear" class="description-icon">
               <ion-icon
                 name="document-text-outline"
                 class="input-icon"
               ></ion-icon>
-            </ion-button>
+            </ion-button> -->
           </ion-item>
           <br />
           <ion-button

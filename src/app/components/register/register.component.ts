@@ -1,3 +1,4 @@
+import { ValidatorsService } from './../../services/validators/validators.service';
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
@@ -25,7 +26,8 @@ export class RegisterComponent implements OnDestroy {
     private toastController: ToastService,
     private router: Router,
     private store: Store<AppState>,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private validatorsService: ValidatorsService
   ) {}
 
   ngOnInit() {
@@ -46,6 +48,7 @@ export class RegisterComponent implements OnDestroy {
       Validators.required,
       Validators.minLength(5),
       Validators.maxLength(30),
+      this.validatorsService.specialCharactersValidator,
     ]);
   }
 
@@ -58,8 +61,15 @@ export class RegisterComponent implements OnDestroy {
   }
 
   onSubmit() {
+    let format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (format.test(this.registerForm.value.username)) {
+      this.toastController.presentToast(
+        'danger',
+        'No special characters allowed'
+      );
+      return;
+    }
     this.isloading = true;
-    let user: any;
     this.fireService
       .signup({
         email: this.registerForm.value.email,
@@ -68,8 +78,6 @@ export class RegisterComponent implements OnDestroy {
       .then(
         (res) => {
           if (res.user.uid) {
-            // user = res.user;
-            // res.user.sendEmailVerification();
             this.analyticsService.setUser(res.user.uid);
             this.analyticsService.logEvent('sign_up', { user: res.user.uid });
             let data = {
@@ -78,9 +86,9 @@ export class RegisterComponent implements OnDestroy {
               uid: res.user.uid,
             };
             this.fireService.saveDetails(data).then(
-              (res) => {
+              () => {
                 this.store.dispatch(logIn());
-                // user.sendEmailVerification();
+                // res.user.sendEmailVerification();
 
                 this.toastController.presentToast(
                   'success',

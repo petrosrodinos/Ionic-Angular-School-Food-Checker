@@ -34,7 +34,8 @@
                 registerForm.get('username').focus) &&
               (registerForm.get('username').hasError('required') ||
                 registerForm.get('username').hasError('minLength') ||
-                registerForm.get('username').hasError('maxLength'))
+                registerForm.get('username').hasError('maxLength') ||
+                registerForm.get('username').hasError('invalidCharacters'))
             "
             slot="error"
             >Invalid username</ion-note

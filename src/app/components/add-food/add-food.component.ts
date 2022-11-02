@@ -8,6 +8,7 @@ import { PhotoService } from 'src/app/services/photo/photo.service';
 import { FoodPhoto } from 'src/app/types/food';
 import { DateService } from 'src/app/services/date/date.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
+import { ValidatorsService } from 'src/app/services/validators/validators.service';
 @Component({
   selector: 'app-add-food',
   templateUrl: './add-food.component.html',
@@ -20,6 +21,7 @@ export class AddFoodComponent implements OnInit, OnDestroy {
   foodForm: FormGroup;
   firstplate: FormControl;
   secondplate: FormControl;
+  dessert: FormControl;
   description: FormControl;
   photo: FoodPhoto;
   loading = false;
@@ -32,7 +34,8 @@ export class AddFoodComponent implements OnInit, OnDestroy {
     private storage: StorageService,
     public photoService: PhotoService,
     private dateService: DateService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private validatorsService: ValidatorsService
   ) {}
 
   ngOnInit() {
@@ -46,15 +49,23 @@ export class AddFoodComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.minLength(4),
       Validators.maxLength(30),
+      this.validatorsService.specialCharactersValidator,
     ]);
     this.secondplate = new FormControl('', [
       Validators.required,
       Validators.minLength(4),
       Validators.maxLength(30),
+      this.validatorsService.specialCharactersValidator,
+    ]);
+    this.dessert = new FormControl('', [
+      Validators.minLength(4),
+      Validators.maxLength(30),
+      this.validatorsService.specialCharactersValidator,
     ]);
     this.description = new FormControl('', [
       Validators.minLength(10),
       Validators.maxLength(100),
+      this.validatorsService.specialCharactersValidator,
     ]);
   }
 
@@ -62,6 +73,7 @@ export class AddFoodComponent implements OnInit, OnDestroy {
     this.foodForm = new FormGroup({
       firstplate: this.firstplate,
       secondplate: this.secondplate,
+      dessert: this.dessert,
       description: this.description,
     });
   }
@@ -71,7 +83,7 @@ export class AddFoodComponent implements OnInit, OnDestroy {
   }
 
   addFood(modal: any): void {
-    if (!this.dateService.canAddFood()) {
+    if (this.dateService.canAddFood()) {
       this.analyticsService.logEvent('add_food_wrong_time', {
         time: this.dateService.formatTime(new Date()),
         date: this.dateService.formatDate(new Date()),
@@ -87,9 +99,7 @@ export class AddFoodComponent implements OnInit, OnDestroy {
       .get('user')
       .then((val: any) => {
         let food = {
-          firstplate: this.foodForm.value.firstplate,
-          secondplate: this.foodForm.value.secondplate,
-          description: this.foodForm.value.description,
+          ...this.foodForm.value,
           username: val.username,
           photo: this.photo,
         };

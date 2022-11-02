@@ -24,6 +24,9 @@
           <li>
             <label>{{ food.secondplate }}</label>
           </li>
+          <li *ngIf="food?.dessert">
+            <label>{{ food.dessert }}</label>
+          </li>
         </ul>
       </ion-card-title>
       <ion-card-subtitle>@{{ food.username || food.userId }}</ion-card-subtitle>
