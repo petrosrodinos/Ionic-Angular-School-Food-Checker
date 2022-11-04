@@ -52,7 +52,6 @@ export class AddFoodComponent implements OnInit, OnDestroy {
       .unsubscribe();
 
     this.status$.subscribe((status) => {
-      console.log(status);
       if (status === 'success') {
         this.toastController.presentToast('success', 'Food added successfully');
         this.analyticsService.logEvent('add_food', { user: this.auth.uid });
