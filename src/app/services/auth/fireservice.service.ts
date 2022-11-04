@@ -25,6 +25,8 @@ export class FireserviceService {
     onAuthStateChanged(this.authState, (user) => {
       if (!user) {
         this.clearUser();
+      } else {
+        // this.store.dispatch(setUserState({ user: user }));
       }
     });
   }

@@ -22,12 +22,15 @@ import {
 } from '@angular/fire/compat/performance';
 import { EffectsModule } from '@ngrx/effects';
 import { FoodReducers } from './ngrx/food/food.reducer';
-
+import { metaReducers } from './ngrx/hydration';
 @NgModule({
   declarations: [AppComponent],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
-    StoreModule.forRoot({ food: FoodReducers, user: AuthReducers }),
+    StoreModule.forRoot(
+      { food: FoodReducers, user: AuthReducers },
+      { metaReducers }
+    ),
     EffectsModule.forRoot([FoodEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
