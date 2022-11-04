@@ -37,8 +37,11 @@
         {{ food.description }}
       </b>
     </ion-card-content>
-    <ion-button fill="clear" *ngIf="isAdmin" (click)="deleteFood(food.id)">{{
-      loading ? "deleting" : "delete"
-    }}</ion-button>
+    <ion-button
+      fill="clear"
+      *ngIf="userIsAdmin$ | async"
+      (click)="deleteFood(food.id)"
+      >{{ loading ? "deleting" : "delete" }}</ion-button
+    >
   </ion-card>
 </div>

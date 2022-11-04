@@ -6,12 +6,18 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
-import { Food } from 'src/app/types/food';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { environment } from 'src/environments/environment';
 import { IonRouterOutlet, Platform } from '@ionic/angular';
 import { App } from '@capacitor/app';
+import {
+  foodSelector,
+  loadingSelector,
+  errorSelector,
+} from 'src/app/ngrx/food/food.selectors';
+import { AppStateInterface } from 'src/app/ngrx/app.state';
+import { getFoods } from 'src/app/ngrx/food/food.actions';
+import { userSelector } from 'src/app/ngrx/auth/auth.selectors';
 
 @Component({
   selector: 'app-home',
@@ -20,18 +26,17 @@ import { App } from '@capacitor/app';
 })
 export class HomePage implements OnInit, OnDestroy {
   public foodSub: Subscription;
-  public isLoggedIn: boolean;
-  public foods: Food[] = [];
-  public loading = true;
-  public isAdmin = false;
-  // auth$: Observable<boolean>;
+  public user$ = this.store.select(userSelector);
+  public loading$ = this.store.select(loadingSelector);
+  public allFoods$ = this.store.select(foodSelector);
+  public error$ = this.store.select(errorSelector);
 
   constructor(
     private router: Router,
     private fireService: FireserviceService,
     public foodService: FoodService,
     public toastController: ToastService,
-    public store: Store,
+    public store: Store<AppStateInterface>,
     public storageService: StorageService,
     public analyticsService: AnalyticsService,
     private platform: Platform,
@@ -43,35 +48,26 @@ export class HomePage implements OnInit, OnDestroy {
         App.exitApp();
       }
     });
-    // this.auth$ = this.store.select(getAuthState);
   }
 
   async ngOnInit() {
     this.getFoods();
     this.notificationService.initPush();
-    setTimeout(() => {
-      let user = this.isUserLoggedIn();
-      if (user) {
-        this.isAdmin = environment.adminEmails.includes(user.email);
-        this.analyticsService.setUser(user.uid);
-      }
-    }, 1000);
+    this.user$
+      .subscribe((user) => {
+        if (user.isLoggedIn) {
+          this.analyticsService.setUser(user.uid);
+        }
+      })
+      .unsubscribe();
   }
 
   getFoods() {
-    // return [];
-    this.loading = true;
-    this.foodSub = this.foodService.getFoods().subscribe(
-      (res: any[]) => {
-        this.foods = res;
-        this.loading = false;
-      },
-      (err: any) => {
-        console.log(err);
-        this.toastController.presentToast('danger', 'Could not fetch meals');
-        this.loading = false;
-      }
-    );
+    try {
+      this.store.dispatch(getFoods());
+    } catch (err) {
+      this.toastController.presentToast('danger', 'Could not fetch meals');
+    }
   }
 
   refresh(ev: any) {
@@ -79,24 +75,13 @@ export class HomePage implements OnInit, OnDestroy {
     ev.target.complete();
   }
 
-  login(): void {
-    this.router.navigateByUrl('/auth/login', { replaceUrl: true });
-  }
-
-  logoutUser(): void {
-    this.isAdmin = false;
-    this.fireService.logout();
-  }
-
-  isUserLoggedIn(): any {
-    return this.fireService.getUser();
-  }
-
   deleteOldFoods() {
     this.foodService.deleteOldFoods();
   }
 
   ngOnDestroy() {
-    this.foodSub.unsubscribe();
+    if (this.foodSub) {
+      this.foodSub.unsubscribe();
+    }
   }
 }

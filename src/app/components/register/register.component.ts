@@ -1,12 +1,12 @@
-import { ValidatorsService } from './../../services/validators/validators.service';
+import { ValidatorsService } from '../../utils/validators/validators.service';
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { AppState } from 'src/app/ngrx/app.state';
-import { logIn } from 'src/app/ngrx/auth/auth.actions';
+import { AppStateInterface } from 'src/app/ngrx/app.state';
+import { setUserState } from 'src/app/ngrx/auth/auth.actions';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { Subscription } from 'rxjs';
 @Component({
@@ -25,7 +25,7 @@ export class RegisterComponent implements OnDestroy {
     public fireService: FireserviceService,
     private toastController: ToastService,
     private router: Router,
-    private store: Store<AppState>,
+    private store: Store<AppStateInterface>,
     private analyticsService: AnalyticsService,
     private validatorsService: ValidatorsService
   ) {}
@@ -61,14 +61,6 @@ export class RegisterComponent implements OnDestroy {
   }
 
   onSubmit() {
-    let format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-    if (format.test(this.registerForm.value.username)) {
-      this.toastController.presentToast(
-        'danger',
-        'No special characters allowed'
-      );
-      return;
-    }
     this.isloading = true;
     this.fireService
       .signup({
@@ -87,14 +79,12 @@ export class RegisterComponent implements OnDestroy {
             };
             this.fireService.saveDetails(data).then(
               () => {
-                this.store.dispatch(logIn());
                 // res.user.sendEmailVerification();
 
                 this.toastController.presentToast(
                   'success',
                   'User created successfully'
                 );
-                this.registerForm.reset();
 
                 this.router.navigate(['/home']);
               },

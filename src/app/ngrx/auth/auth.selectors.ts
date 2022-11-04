@@ -1,15 +1,20 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../app.state';
-import { AuthState } from './auth.reducer';
+import { AppStateInterface } from '../app.state';
+import { UserStateInterface } from './auth.types';
 
-export const selectAuth = (state: AppState) => state.auth;
+export const authSelector = (state: AppStateInterface) => state.user;
 
-export const selectLoading = createSelector(
-  selectAuth,
-  (state: AuthState) => state.loading
+export const isLoggedInSelector = createSelector(
+  authSelector,
+  (state: UserStateInterface) => state.isLoggedIn
 );
 
-export const getAuthState = createSelector(
-  selectAuth,
-  (state: AuthState) => state.isLoggedIn
+export const userSelector = createSelector(
+  authSelector,
+  (state: UserStateInterface) => state
+);
+
+export const userIsAdminSelector = createSelector(
+  authSelector,
+  (state: UserStateInterface) => state.admin
 );

@@ -1,13 +1,14 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FireserviceService } from 'src/app/services/auth/fireservice.service';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/ngrx/app.state';
+import { select, Store } from '@ngrx/store';
+import { AppStateInterface } from 'src/app/ngrx/app.state';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { NgTemplateOutlet } from '@angular/common';
+import * as AuthActions from 'src/app/ngrx/auth/auth.actions';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,18 +17,17 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  public isloading = false;
+  loginSub: Subscription;
+  isloading = false;
   loginForm: FormGroup;
   email: FormControl;
   password: FormControl;
-  public loginSub: Subscription;
 
   constructor(
     public fireService: FireserviceService,
     private toastController: ToastService,
     private router: Router,
-    private store: Store<AppState>,
-    private storage: StorageService,
+    private store: Store<AppStateInterface>,
     private analyticsService: AnalyticsService
   ) {}
 
@@ -72,14 +72,18 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.loginSub = this.fireService
               .getDetails({ uid: res.user.uid })
               .subscribe(
-                (res) => {
+                (res: any) => {
                   if (this.fireService.getUser()) {
-                    this.storage.set('user', res);
+                    // this.storage.set('user', res);
                     this.toastController.presentToast(
                       'success',
                       'Welcome ' + res['username']
                     );
-                    this.loginSub.unsubscribe();
+                    this.store.dispatch(
+                      AuthActions.setUserState({
+                        user: res,
+                      })
+                    );
                     this.router.navigate(['/home']);
                   }
                 },

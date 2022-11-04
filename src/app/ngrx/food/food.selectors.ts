@@ -1,10 +1,25 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../app.state';
-import { FoodState } from './food.reducer';
+import { AppStateInterface } from '../app.state';
+import { FoodStateInterface } from './food.types';
 
-export const selectAuth = (state: AppState) => state.auth;
+export const FoodSelector = (state: AppStateInterface) => state.food;
 
-export const selectLoading = createSelector(
-  selectAuth,
-  (state: FoodState) => state.loading
+export const loadingSelector = createSelector(
+  FoodSelector,
+  (state: FoodStateInterface) => state.loading
+);
+
+export const foodSelector = createSelector(
+  FoodSelector,
+  (state: FoodStateInterface) => state.foods
+);
+
+export const errorSelector = createSelector(
+  FoodSelector,
+  (state: FoodStateInterface) => state.error
+);
+
+export const statusSelector = createSelector(
+  FoodSelector,
+  (state: FoodStateInterface) => state.status
 );

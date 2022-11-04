@@ -1,15 +1,47 @@
 import { createReducer, on } from '@ngrx/store';
-import { addFoodAction } from './food.actions';
+import {
+  addFood,
+  addFoodFailure,
+  addFoodSuccess,
+  getFoods,
+  getFoodsFailure,
+  getFoodsSuccess,
+} from './food.actions';
+import { FoodStateInterface } from './food.types';
 
-export interface FoodState {
-  loading: boolean;
-}
-
-export const initialState: FoodState = {
+export const initialState: FoodStateInterface = {
   loading: false,
+  foods: [],
+  error: '',
+  status: '',
 };
 
-export const counterReducer = createReducer(
+export const FoodReducers = createReducer(
   initialState,
-  on(addFoodAction, (state) => ({ ...state, loading: !state.loading }))
+  on(getFoods, (state) => ({ ...state, loading: true })),
+  on(getFoodsSuccess, (state, { foods }) => ({
+    ...state,
+    foods,
+    loading: false,
+    error: '',
+  })),
+  on(getFoodsFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
+
+  on(addFood, (state) => ({ ...state, loading: true })),
+  on(addFoodSuccess, (state) => ({
+    ...state,
+    loading: false,
+    error: '',
+    status: 'success',
+  })),
+  on(addFoodFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+    status: 'error',
+  }))
 );

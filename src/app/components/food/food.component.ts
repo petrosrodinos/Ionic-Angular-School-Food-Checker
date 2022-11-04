@@ -1,40 +1,26 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { userIsAdminSelector } from 'src/app/ngrx/auth/auth.selectors';
+import { AppStateInterface } from 'src/app/ngrx/app.state';
+import { Component, Input } from '@angular/core';
 import { Food } from 'src/app/types/food';
-import { DateService } from 'src/app/services/date/date.service';
 import { FoodService } from 'src/app/services/food/food.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-food',
   templateUrl: './food.component.html',
   styleUrls: ['./food.component.scss'],
 })
-export class FoodComponent implements OnInit {
+export class FoodComponent {
   @Input() food: Food;
   public loading = false;
   public isAdmin = false;
+  public userIsAdmin$ = this.store.select(userIsAdminSelector);
   constructor(
-    private dateService: DateService,
     public foodService: FoodService,
     public toastController: ToastService,
-    private storage: StorageService
+    public store: Store<AppStateInterface>
   ) {}
-
-  async ngOnInit() {
-    this.storage
-      .get('user')
-      .then((res) => {
-        this.isAdmin = res?.admin || false;
-      })
-      .catch((err) => {
-        this.isAdmin = false;
-      });
-  }
-
-  getTime(date: Date) {
-    return this.dateService.formatDate(date);
-  }
 
   deleteFood(id: string): void {
     this.loading = true;

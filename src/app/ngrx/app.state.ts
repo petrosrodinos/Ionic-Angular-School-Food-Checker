@@ -1,7 +1,7 @@
-import { AuthState } from './auth/auth.reducer';
-import { FoodState } from './food/food.reducer';
+import { UserStateInterface } from './auth/auth.types';
+import { FoodStateInterface } from './food/food.types';
 
-export interface AppState {
-  auth: AuthState;
-  food: FoodState;
+export interface AppStateInterface {
+  user: UserStateInterface;
+  food: FoodStateInterface;
 }

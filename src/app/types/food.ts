@@ -4,11 +4,12 @@ export interface FoodPhoto {
 }
 
 export interface Food {
-  username?: string;
+  username: string;
   userAvatar?: string;
   photo?: FoodPhoto;
   firstplate: string;
   secondplate: string;
+  dessert?: string;
   description?: string;
   date?: string;
   time?: string;

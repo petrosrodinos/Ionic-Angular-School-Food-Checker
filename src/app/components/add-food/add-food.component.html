@@ -8,7 +8,7 @@
 
         <ion-buttons slot="end">
           <ion-button
-            [disabled]="loading || !this.foodForm.valid"
+            [disabled]="(isLoading$ | async) || !this.foodForm.valid"
             color="primary"
             (click)="addFood(modal)"
             [strong]="true"
@@ -17,7 +17,7 @@
         </ion-buttons>
         <ion-title>Add today's meal</ion-title>
         <ion-progress-bar
-          *ngIf="loading"
+          *ngIf="isLoading$ | async"
           type="indeterminate"
         ></ion-progress-bar>
       </ion-toolbar>
@@ -78,7 +78,7 @@
               ></ion-icon>
             </ion-button>
           </ion-item>
-          <ion-item>
+          <!-- <ion-item>
             <ion-input
               formControlName="dessert"
               type="text"
@@ -102,7 +102,7 @@
                 class="input-icon"
               ></ion-icon>
             </ion-button>
-          </ion-item>
+          </ion-item> -->
           <ion-item>
             <ion-textarea
               placeholder="Description"
@@ -121,12 +121,12 @@
               slot="error"
               >Invalid description value</ion-note
             >
-            <!-- <ion-button slot="end" fill="clear" class="description-icon">
+            <ion-button slot="end" fill="clear" class="description-icon">
               <ion-icon
                 name="document-text-outline"
                 class="input-icon"
               ></ion-icon>
-            </ion-button> -->
+            </ion-button>
           </ion-item>
           <br />
           <ion-button

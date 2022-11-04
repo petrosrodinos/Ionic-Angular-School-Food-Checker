@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-icon
+      <!-- <ion-icon
         (click)="login()"
         *ngIf="!isUserLoggedIn()"
         class="toolbar-icon login-btn"
@@ -14,10 +14,27 @@
         name="power-outline"
         color="primary"
         (click)="logoutUser()"
+      ></ion-icon> -->
+      <ion-icon
+        (click)="router.navigateByUrl('/auth/login', { replaceUrl: true })"
+        *ngIf="!(user$ | async).isLoggedIn"
+        class="toolbar-icon login-btn"
+        name="log-in-outline"
+        color="primary"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="(user$ | async).isLoggedIn"
+        class="toolbar-icon"
+        name="power-outline"
+        color="primary"
+        (click)="fireService.logout()"
       ></ion-icon>
     </ion-buttons>
     <ion-title> List </ion-title>
-    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+    <ion-progress-bar
+      *ngIf="loading$ | async"
+      type="indeterminate"
+    ></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -26,24 +43,32 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-grid *ngIf="foods.length>0" class="food-container">
+  <ion-grid *ngIf="allFoods$" class="food-container">
     <ion-row>
-      <ion-col *ngFor="let food of foods" size="12" size-md="6" size-lg="4">
+      <ion-col
+        *ngFor="let food of allFoods$ | async"
+        size="12"
+        size-md="6"
+        size-lg="4"
+      >
         <app-food [food]="food"></app-food
       ></ion-col>
     </ion-row>
   </ion-grid>
 
-  <app-loading-content [loading]="loading"></app-loading-content>
+  <app-loading-content [loading]="loading$ | async"></app-loading-content>
 
-  <div class="no-data__container" *ngIf="!loading && foods.length==0">
+  <div
+    class="no-data__container"
+    *ngIf="!(loading$ | async) && (allFoods$ | async)?.length==0"
+  >
     <h2>There are no data inserted yet :(</h2>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button
       (click)="deleteOldFoods()"
-      *ngIf="isAdmin"
+      *ngIf="(user$ | async).admin"
       color="secondary"
     >
       <ion-icon name="trash-outline"></ion-icon>

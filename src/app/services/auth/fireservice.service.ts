@@ -5,8 +5,9 @@ import { auth } from 'src/app/types/auth';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { StorageService } from '../storage/storage.service';
 import { Store } from '@ngrx/store';
-import { logOut } from 'src/app/ngrx/auth/auth.actions';
+import { logOut, setUserState } from 'src/app/ngrx/auth/auth.actions';
 import { AnalyticsService } from '../analytics/analytics.service';
+import { AppStateInterface } from 'src/app/ngrx/app.state';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class FireserviceService {
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
     private storage: StorageService,
-    public store: Store,
+    private store: Store<AppStateInterface>,
     private analyticsService: AnalyticsService
   ) {
     onAuthStateChanged(this.authState, (user) => {
@@ -61,7 +62,8 @@ export class FireserviceService {
   }
 
   saveDetails(data: any) {
-    this.storage.set('user', data);
+    // this.storage.set('user', data);
+    this.store.dispatch(setUserState({ user: data }));
     return this.firestore.collection('users').doc(data.uid).set(data);
   }
 

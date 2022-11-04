@@ -1,10 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 
-export const authAction = createAction(
-  '[Auth Page] Auth',
-  props<{ loadingValue: boolean }>
-);
+export const setUserState = createAction('[Auth] login success', props<any>());
 
-export const logOut = createAction('[Auth Page] logout');
-
-export const logIn = createAction('[Auth Page] login');
+export const logOut = createAction('[Auth] logout');

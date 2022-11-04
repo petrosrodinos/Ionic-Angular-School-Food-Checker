@@ -3,12 +3,18 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { FoodService } from 'src/app/services/food/food.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import { PhotoService } from 'src/app/services/photo/photo.service';
-import { FoodPhoto } from 'src/app/types/food';
+import { Food, FoodPhoto } from 'src/app/types/food';
 import { DateService } from 'src/app/services/date/date.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ValidatorsService } from 'src/app/services/validators/validators.service';
+import { ValidatorsService } from 'src/app/utils/validators/validators.service';
+import { userSelector } from 'src/app/ngrx/auth/auth.selectors';
+import { AppStateInterface } from 'src/app/ngrx/app.state';
+import { addFood } from 'src/app/ngrx/food/food.actions';
+import {
+  loadingSelector,
+  statusSelector,
+} from 'src/app/ngrx/food/food.selectors';
 @Component({
   selector: 'app-add-food',
   templateUrl: './add-food.component.html',
@@ -24,19 +30,38 @@ export class AddFoodComponent implements OnInit, OnDestroy {
   dessert: FormControl;
   description: FormControl;
   photo: FoodPhoto;
-  loading = false;
-  auth: boolean = false;
+  auth: any;
+  user$ = this.store.select(userSelector);
+  isLoading$ = this.store.select(loadingSelector);
+  status$ = this.store.select(statusSelector);
+  modal: any;
 
   constructor(
-    public store: Store,
+    public store: Store<AppStateInterface>,
     private toastController: ToastService,
     public foodService: FoodService,
-    private storage: StorageService,
     public photoService: PhotoService,
     private dateService: DateService,
     private analyticsService: AnalyticsService,
     private validatorsService: ValidatorsService
-  ) {}
+  ) {
+    this.user$
+      .subscribe((user) => {
+        this.auth = user;
+      })
+      .unsubscribe();
+
+    this.status$.subscribe((status) => {
+      console.log(status);
+      if (status === 'success') {
+        this.toastController.presentToast('success', 'Food added successfully');
+        this.analyticsService.logEvent('add_food', { user: this.auth.uid });
+        this.resetFields();
+      } else if (status === 'error') {
+        this.toastController.presentToast('error', 'Error adding food');
+      }
+    });
+  }
 
   ngOnInit() {
     this.presentingElement = document.querySelector('.ion-page');
@@ -83,6 +108,11 @@ export class AddFoodComponent implements OnInit, OnDestroy {
   }
 
   addFood(modal: any): void {
+    if (!this.auth.isLoggedIn) {
+      this.toastController.presentToast('primary', 'Please log in to continue');
+      this.analyticsService.logEvent('add_food_no_auth', { user: 'no_auth' });
+      return;
+    }
     if (!this.dateService.canAddFood()) {
       this.analyticsService.logEvent('add_food_wrong_time', {
         time: this.dateService.formatTime(new Date()),
@@ -94,47 +124,56 @@ export class AddFoodComponent implements OnInit, OnDestroy {
       );
       return;
     }
-    this.loading = true;
-    this.storage
-      .get('user')
-      .then((val: any) => {
-        let food = {
-          ...this.foodForm.value,
-          username: val.username,
-          photo: this.photo,
-        };
-        this.foodService
-          .addFood(food)
-          .then((res) => {
-            this.toastController.presentToast(
-              'success',
-              'Meal added successfully'
-            );
-            this.analyticsService.logEvent('add_food', { user: val.uid });
-            this.resetFields(modal);
-          })
-          .catch((err) => {
-            this.toastController.presentToast('primary', 'Could not add meal');
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      })
-      .catch((err) => {
-        this.analyticsService.logEvent('add_food_no_auth', { user: 'no_auth' });
-        this.toastController.presentToast(
-          'primary',
-          'Please log in to continue'
-        );
-      });
+    this.modal = modal;
+    let food: Food = {
+      ...this.foodForm.value,
+      username: this.auth.username,
+      photo: this.photo,
+    };
+    this.store.dispatch(addFood(food));
+    // this.loading = true;
+
+    // .then((val: any) => {
+    // let food = {
+    //   ...this.foodForm.value,
+    //   username: val.username,
+    //   photo: this.photo,
+    // };
+    //   this.foodService
+    //     .addFood(food)
+    //     .then((res) => {
+    // this.toastController.presentToast(
+    //   'success',
+    //   'Meal added successfully'
+    // );
+    //       this.analyticsService.logEvent('add_food', { user: val.uid });
+    //       this.resetFields(modal);
+    //     })
+    //     .catch((err) => {
+    //       this.toastController.presentToast('primary', 'Could not add meal');
+    //     })
+    //     .finally(() => {
+    //       this.loading = false;
+    //     });
+    // })
+    // .catch((err) => {
+    //   this.analyticsService.logEvent('add_food_no_auth', { user: 'no_auth' });
+    //   this.toastController.presentToast(
+    //     'primary',
+    //     'Please log in to continue'
+    //   );
+    // })
+    // .finally(() => {
+    //   this.loading = false;
+    // });
   }
 
-  resetFields(modal: any) {
-    this.foodForm.reset();
-    modal.dismiss();
+  resetFields() {
+    this.foodForm?.reset();
+    this.modal?.dismiss?.();
   }
 
   ngOnDestroy() {
-    this.foodForm.reset();
+    this.presentingElement = null;
   }
 }
